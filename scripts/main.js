@@ -1,53 +1,59 @@
+import { mobileMenu, mobileMenuOpener } from './ux.js'
+
 const API_KEY = '6a2ae44babf3ff78b6e4d09363704281'
-const API_URL = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${API_KEY}&page=1`
 
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/w1280'
 const SEARCH_URL = `https://api.themoviedb.org/3/search/movie?&api_key=${API_KEY}&query=`
 
 const form = document.getElementById('form')
-const search = document.querySelector('#form #search')
 const mobileForm = document.getElementById('mob-search')
-const mobileSearch = document.querySelector('#mob-search .search')
+const search = document.querySelector('#form #search')
 const main = document.getElementById('main')
 
-const nav = document.querySelector('header.nav')
-
-const mobileMenuOpener = document.querySelector('.mobile-menu-opener')
-const mobileMenu = document.querySelector('.mob-menu-wrapper')
-
-mobileMenuOpener.addEventListener('click', () => {
-	updateMobileMenu()
-})
-function updateMobileMenu() {
-	if (mobileMenu.classList.contains('open')) {
-		mobileMenu.classList.remove('open')
-		mobileMenuOpener.classList.remove('open')
-	} else {
-		mobileMenu.classList.add('open')
-		mobileMenuOpener.classList.add('open')
-	}
+const sorts = {
+	popularity: {
+		desc: 'popularity.desc',
+		asc: 'popularity.asc',
+	},
 }
 
-getMovies(API_URL)
+let currentMedia = 'movie'
+let page = 1
+let sortBy = sorts.popularity.desc
+
+/**
+ * Get a request URL with parameters
+ * @param {string} currentMedia the type (movie/tv)
+ * @param {string} sortBy what filters to sort by
+ * @param {number} page the page to look at
+ * @returns {string} API URL
+ */
+const getUrl = (currentMedia, sortBy, page) => {
+	return `https://api.themoviedb.org/3/discover/${currentMedia}?sort_by=${sortBy}&api_key=${API_KEY}&page=${page}`
+}
+
+getMedia(getUrl(currentMedia, sortBy, page))
 
 // Get movies by popularity
-async function getMovies(url) {
+async function getMedia(url) {
 	const res = await fetch(url)
 	const data = await res.json()
+	console.log(url)
 
 	mobileMenu.classList.remove('open')
 	mobileMenuOpener.classList.remove('open')
-	showMovies(data.results)
+	showMedia(data.results)
 }
 
-function showMovies(movies) {
+// Clear the main and append each movie (which has a poster)
+function showMedia(movies) {
 	main.innerHTML = ''
 
 	movies.forEach((movie) => {
 		const { title, poster_path, vote_average, overview } = movie
 
-		const movieElement = document.createElement('div')
-		movieElement.classList.add('movie')
+		const mediaElement = document.createElement('div')
+		mediaElement.classList.add('media')
 
 		// If poster_path is null
 		// continue
@@ -55,9 +61,9 @@ function showMovies(movies) {
 			return true
 		}
 
-		movieElement.innerHTML = `
+		mediaElement.innerHTML = `
       <img src="${IMAGE_PATH + poster_path}" alt="${title}">
-      <div class="movie-info">
+      <div class="info">
         <h3>${title}</h3>
         <span class="${
 					vote_average > 5 ? (vote_average > 8 ? 'green' : 'yellow') : 'red'
@@ -68,7 +74,7 @@ function showMovies(movies) {
         ${overview}
       </div>
     `
-		main.appendChild(movieElement)
+		main.appendChild(mediaElement)
 	})
 }
 
@@ -79,7 +85,7 @@ mobileForm.addEventListener('submit', (e) => {
 
 	if (mobileSearch && mobileSearch !== '') {
 		mobileMenu.classList.remove('open')
-		getMovies(SEARCH_URL + searchTerm + '"')
+		getMedia(SEARCH_URL + searchTerm + '"')
 		mobileSearch.value = ''
 	} else {
 		console.log('Error searching')
@@ -92,24 +98,9 @@ form.addEventListener('submit', (e) => {
 	let searchTerm = search.value
 
 	if (search && search !== '') {
-		getMovies(SEARCH_URL + searchTerm + '"')
+		getMedia(SEARCH_URL + searchTerm + '"')
 		search.value = ''
 	} else {
 		console.log('Error searching')
 	}
 })
-
-let lastYPos = 0
-const handleScroll = () => {
-	if (window.pageYOffset > lastYPos) {
-		// user scrolled down
-		nav.classList.add('scrolled')
-	} else {
-		// user scrolled up
-		nav.classList.remove('scrolled')
-	}
-
-	lastYPos = window.pageYOffset
-}
-
-window.addEventListener('scroll', handleScroll)
