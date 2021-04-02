@@ -2,11 +2,11 @@
 	width: 15rem;
 	height: 30rem;
 	margin: 1rem;
-	background-color: $secondary-color;
 	box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
 	position: relative;
 	overflow: hidden;
 	border-radius: 0.3rem;
+	background-color: $secondary-color;
 
 	img {
 		width: 100%;
@@ -19,9 +19,14 @@
 		justify-content: space-between;
 		padding: 0.5rem 1rem 1rem;
 		letter-spacing: 0.5px;
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		background: $secondary-color;
 
 		h3 {
-			margin-top: 0;
+			margin: 0;
+			height: 100%;
 		}
 
 		span {
@@ -29,6 +34,8 @@
 			padding: 0.25rem 0.5rem;
 			border-radius: 3px;
 			font-weight: bold;
+			align-self: flex-end;
+			margin-left: 0.4rem;
 
 			&.green {
 				color: rgba(98, 221, 98, 0.829);
@@ -56,5 +63,9 @@
 	}
 	&:hover .overview {
 		transform: translateY(0%);
+	}
+
+	@media screen and (max-width: $mobile-width-bounds) {
+		width: 80%;
 	}
 }

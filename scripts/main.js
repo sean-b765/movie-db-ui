@@ -1,14 +1,18 @@
 import { mobileMenu, mobileMenuOpener } from './ux.js'
 
 const API_KEY = '6a2ae44babf3ff78b6e4d09363704281'
-
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/w1280'
 const SEARCH_URL = `https://api.themoviedb.org/3/search/movie?&api_key=${API_KEY}&query=`
 
 const form = document.getElementById('form')
+const search = form.querySelector('#search')
 const mobileForm = document.getElementById('mob-search')
-const search = document.querySelector('#form #search')
+const mobileSearch = mobileForm.querySelector('#search')
+
 const main = document.getElementById('main')
+
+const mediaSelectMovie = document.querySelectorAll('.media-select.movies')
+const mediaSelectTv = document.querySelectorAll('.media-select.tv')
 
 const sorts = {
 	popularity: {
@@ -16,41 +20,48 @@ const sorts = {
 		asc: 'popularity.asc',
 	},
 }
+const mediaTypes = {
+	movie: 'movie',
+	tv: 'tv',
+	multi: 'multi',
+}
 
-let currentMedia = 'movie'
+// Default options
+let currentMedia = mediaTypes.movie
 let page = 1
 let sortBy = sorts.popularity.desc
+//
 
 /**
  * Get a request URL with parameters
- * @param {string} currentMedia the type (movie/tv)
- * @param {string} sortBy what filters to sort by
- * @param {number} page the page to look at
+ * @param {boolean} searching true: searching, false: discovering
+ * @param {string} searchTerm the term/s to search for
  * @returns {string} API URL
  */
-const getUrl = (currentMedia, sortBy, page) => {
-	return `https://api.themoviedb.org/3/discover/${currentMedia}?sort_by=${sortBy}&api_key=${API_KEY}&page=${page}`
+const constructRequestUrl = (searching = false, searchTerm = '') => {
+	if (searching && searchTerm !== '') {
+		console.log('search')
+		return `https://api.themoviedb.org/3/search/${currentMedia}?sort_by=${sortBy}&api_key=${API_KEY}&page=${page}&query="${searchTerm}"`
+	} else {
+		console.log('fetch')
+		return `https://api.themoviedb.org/3/discover/${currentMedia}?sort_by=${sortBy}&api_key=${API_KEY}&page=${page}`
+	}
 }
-
-getMedia(getUrl(currentMedia, sortBy, page))
-
-// Get movies by popularity
+// Get movies/tv
 async function getMedia(url) {
 	const res = await fetch(url)
 	const data = await res.json()
-	console.log(url)
 
 	mobileMenu.classList.remove('open')
 	mobileMenuOpener.classList.remove('open')
 	showMedia(data.results)
 }
-
-// Clear the main and append each movie (which has a poster)
-function showMedia(movies) {
+// Clear the main and append each movie (those which have a poster)
+function showMedia(medias) {
 	main.innerHTML = ''
 
-	movies.forEach((movie) => {
-		const { title, poster_path, vote_average, overview } = movie
+	medias.forEach((media) => {
+		const { name, title, poster_path, vote_average, overview } = media
 
 		const mediaElement = document.createElement('div')
 		mediaElement.classList.add('media')
@@ -64,7 +75,7 @@ function showMedia(movies) {
 		mediaElement.innerHTML = `
       <img src="${IMAGE_PATH + poster_path}" alt="${title}">
       <div class="info">
-        <h3>${title}</h3>
+        <h3>${!title ? name : title}</h3>
         <span class="${
 					vote_average > 5 ? (vote_average > 8 ? 'green' : 'yellow') : 'red'
 				}">${vote_average}</span>
@@ -78,29 +89,71 @@ function showMedia(movies) {
 	})
 }
 
+// Mobile/desktop search bar
 mobileForm.addEventListener('submit', (e) => {
 	e.preventDefault()
 
 	let searchTerm = mobileSearch.value
 
-	if (mobileSearch && mobileSearch !== '') {
+	if (mobileSearch && searchTerm !== '') {
 		mobileMenu.classList.remove('open')
-		getMedia(SEARCH_URL + searchTerm + '"')
+
+		getMedia(constructRequestUrl(true, searchTerm))
 		mobileSearch.value = ''
 	} else {
 		console.log('Error searching')
 	}
 })
-
 form.addEventListener('submit', (e) => {
 	e.preventDefault()
 
 	let searchTerm = search.value
 
-	if (search && search !== '') {
-		getMedia(SEARCH_URL + searchTerm + '"')
+	if (search && searchTerm !== '') {
+		getMedia(constructRequestUrl(true, searchTerm))
 		search.value = ''
 	} else {
 		console.log('Error searching')
 	}
 })
+
+/*
+  Handle navbar selection
+	When clicking movies remove active class from Tv
+	...vice versa
+	Then perform request/refresh main container
+ */
+mediaSelectMovie.forEach((item) => {
+	// Add click event to the mobile/desktop navbar 'movie' options
+	item.addEventListener('click', () => {
+		currentMedia = mediaTypes.movie
+		// make the navbar option active
+		item.classList.add('active')
+
+		// Remove active class from tv (mobile/desktop navbar)
+		mediaSelectTv.forEach((tv) => {
+			tv.classList.remove('active')
+		})
+
+		// Refresh media
+		getMedia(constructRequestUrl())
+	})
+})
+mediaSelectTv.forEach((item) => {
+	// Add click event to both desktop/mobile navbar tv options
+	item.addEventListener('click', () => {
+		currentMedia = mediaTypes.tv
+		// Add active class
+		item.classList.add('active')
+
+		// Remove active class from movie (mobile/desktop navbar)
+		mediaSelectMovie.forEach((movie) => {
+			movie.classList.remove('active')
+		})
+
+		getMedia(constructRequestUrl())
+	})
+})
+
+// Get media on page load
+getMedia(constructRequestUrl())

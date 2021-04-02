@@ -2,6 +2,9 @@
 
 $primary-color: #161a1d;
 $secondary-color: #a4161a;
+$accent-light: #dbeeda;
+
+$mobile-width-bounds: 28rem;
 
 @import '_media';
 @import '_header';

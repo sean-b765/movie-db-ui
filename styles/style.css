@@ -3,12 +3,12 @@
   width: 15rem;
   height: 30rem;
   margin: 1rem;
-  background-color: #a4161a;
   -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
           box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
   border-radius: 0.3rem;
+  background-color: #a4161a;
 }
 
 .media img {
@@ -28,10 +28,15 @@
           justify-content: space-between;
   padding: 0.5rem 1rem 1rem;
   letter-spacing: 0.5px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #a4161a;
 }
 
 .media .info h3 {
-  margin-top: 0;
+  margin: 0;
+  height: 100%;
 }
 
 .media .info span {
@@ -39,6 +44,9 @@
   padding: 0.25rem 0.5rem;
   border-radius: 3px;
   font-weight: bold;
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+  margin-left: 0.4rem;
 }
 
 .media .info span.green {
@@ -71,6 +79,12 @@
 .media:hover .overview {
   -webkit-transform: translateY(0%);
           transform: translateY(0%);
+}
+
+@media screen and (max-width: 28rem) {
+  .media {
+    width: 80%;
+  }
 }
 
 header {
@@ -147,10 +161,20 @@ header ul li {
   padding: 1rem 1rem;
   list-style: none;
   cursor: pointer;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+header ul li.active {
+  color: #dbeeda;
+}
+
+header ul li.active:hover {
+  color: #dbeeda;
 }
 
 header ul li:hover {
-  color: #361c1c;
+  color: #312b2b;
 }
 
 header form .search {
@@ -334,7 +358,9 @@ header .mob-menu-wrapper ul li {
 }
 
 header .mob-menu-wrapper #mob-search {
-  max-width: 90%;
+  max-width: 70%;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
 }
 
 header .mob-menu-wrapper #mob-search .search {
