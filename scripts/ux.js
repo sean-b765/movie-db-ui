@@ -1,5 +1,3 @@
-export const mobileSearch = document.querySelector('#mob-search .search')
-
 export const mobileMenuOpener = document.querySelector('.mobile-menu-opener')
 export const mobileMenu = document.querySelector('.mob-menu-wrapper')
 

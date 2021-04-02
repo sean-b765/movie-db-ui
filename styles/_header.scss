@@ -42,8 +42,15 @@ header {
 			padding: 1rem 1rem;
 			list-style: none;
 			cursor: pointer;
+			transition: all 0.5s ease;
+			&.active {
+				color: $accent-light;
+				&:hover {
+					color: $accent-light;
+				}
+			}
 			&:hover {
-				color: rgb(54, 28, 28);
+				color: #312b2b;
 			}
 		}
 	}
@@ -165,7 +172,9 @@ header {
 		}
 
 		#mob-search {
-			max-width: 90%;
+			max-width: 70%;
+			padding-top: 1rem;
+			padding-bottom: 2rem;
 			.search {
 				width: 100%;
 			}
@@ -191,7 +200,7 @@ header {
 		}
 	}
 	/* Change to mobile menu, remove search */
-	@media screen and (max-width: 28rem) {
+	@media screen and (max-width: $mobile-width-bounds) {
 		padding: 0.5rem 1rem 0.5rem 0.2rem;
 		&.scrolled {
 			padding: 0.5rem 1rem 0.5rem 0.2rem;
