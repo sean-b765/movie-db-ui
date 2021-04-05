@@ -13,6 +13,7 @@ function updateMobileMenu() {
 	if (mobileMenu.classList.contains('open')) {
 		mobileMenu.classList.remove('open')
 		mobileMenuOpener.classList.remove('open')
+		window.scrollTo(0, 0)
 	} else {
 		mobileMenu.classList.add('open')
 		mobileMenuOpener.classList.add('open')

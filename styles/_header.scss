@@ -104,7 +104,7 @@ header {
 			width: 20%;
 			height: 2px;
 			transform: translateY(-1px);
-			transition: all 0.5s ease;
+			transition: all 0.25s ease;
 		}
 		&::after,
 		&::before {
@@ -113,7 +113,7 @@ header {
 			height: 2px;
 			width: 40%;
 			background: $primary-color;
-			transition: all 0.25s ease;
+			transition: all 0.3s ease;
 		}
 		&::after {
 			transform: translateY(calc(-0.5rem - 1px));
@@ -191,7 +191,7 @@ header {
 		}
 	}
 	/* Make the navbar smaller */
-	@media screen and (max-width: 38rem) {
+	@media screen and (max-width: $tablet-width-bounds) {
 		padding: 0rem 1rem 0rem 0.2rem;
 
 		.left .icon {

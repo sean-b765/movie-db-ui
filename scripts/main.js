@@ -1,25 +1,27 @@
-import { mobileMenu, mobileMenuOpener } from './ux.js'
+import { mobileMenu, mobileMenuOpener } from './header.js'
 
 const API_KEY = '6a2ae44babf3ff78b6e4d09363704281'
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/w1280'
-const SEARCH_URL = `https://api.themoviedb.org/3/search/movie?&api_key=${API_KEY}&query=`
 
 const form = document.getElementById('form')
 const search = form.querySelector('#search')
 const mobileForm = document.getElementById('mob-search')
 const mobileSearch = mobileForm.querySelector('#search')
 
+const filters = document.getElementById('filters')
+
 const main = document.getElementById('main')
 
 const mediaSelectMovie = document.querySelectorAll('.media-select.movies')
 const mediaSelectTv = document.querySelectorAll('.media-select.tv')
 
-const sorts = {
-	popularity: {
-		desc: 'popularity.desc',
-		asc: 'popularity.asc',
-	},
-}
+/* Filters */
+const release = document.getElementById('release')
+const checkboxRelease = document.getElementById('doYearFilter')
+const minRating = document.getElementById('minRating')
+const maxRating = document.getElementById('maxRating')
+const checkboxRating = document.getElementById('doRatingFilter')
+
 const mediaTypes = {
 	movie: 'movie',
 	tv: 'tv',
@@ -27,9 +29,16 @@ const mediaTypes = {
 }
 
 // Default options
-let currentMedia = mediaTypes.movie
-let page = 1
-let sortBy = sorts.popularity.desc
+let optCurrentMedia = mediaTypes.movie
+let optPage = 1
+let optSortBy = 'popularity.desc'
+let optFilters = {
+	rating: {
+		min: 0,
+		max: 10,
+	},
+	releaseDate: 0,
+}
 //
 
 /**
@@ -39,16 +48,27 @@ let sortBy = sorts.popularity.desc
  * @returns {string} API URL
  */
 const constructRequestUrl = (searching = false, searchTerm = '') => {
+	let filters = `${
+		checkboxRelease.checked ? `&primary_release_year=${release.value}` : ''
+	}${
+		checkboxRating.checked
+			? `&vote_average.gte=${minRating.value}&vote_average.lte=${maxRating.value}`
+			: ''
+	}`
+	console.log(release.value)
+	let sort = `&sort_by=${optSortBy}`
+
+	console.log(filters, sort)
+
 	if (searching && searchTerm !== '') {
-		console.log('search')
-		return `https://api.themoviedb.org/3/search/${currentMedia}?sort_by=${sortBy}&api_key=${API_KEY}&page=${page}&query="${searchTerm}"`
+		return `https://api.themoviedb.org/3/search/${optCurrentMedia}?${filters}${sort}&api_key=${API_KEY}&page=${optPage}&query="${searchTerm}"`
 	} else {
-		console.log('fetch')
-		return `https://api.themoviedb.org/3/discover/${currentMedia}?sort_by=${sortBy}&api_key=${API_KEY}&page=${page}`
+		return `https://api.themoviedb.org/3/discover/${optCurrentMedia}?${filters}${sort}&api_key=${API_KEY}&page=${optPage}`
 	}
 }
 // Get movies/tv
 async function getMedia(url) {
+	console.log(url)
 	const res = await fetch(url)
 	const data = await res.json()
 
@@ -98,6 +118,7 @@ mobileForm.addEventListener('submit', (e) => {
 	if (mobileSearch && searchTerm !== '') {
 		mobileMenu.classList.remove('open')
 
+		window.scrollTo(0, 0)
 		getMedia(constructRequestUrl(true, searchTerm))
 		mobileSearch.value = ''
 	} else {
@@ -110,6 +131,7 @@ form.addEventListener('submit', (e) => {
 	let searchTerm = search.value
 
 	if (search && searchTerm !== '') {
+		window.scrollTo(0, 0)
 		getMedia(constructRequestUrl(true, searchTerm))
 		search.value = ''
 	} else {
@@ -126,34 +148,81 @@ form.addEventListener('submit', (e) => {
 mediaSelectMovie.forEach((item) => {
 	// Add click event to the mobile/desktop navbar 'movie' options
 	item.addEventListener('click', () => {
-		currentMedia = mediaTypes.movie
+		optCurrentMedia = mediaTypes.movie
 		// make the navbar option active
-		item.classList.add('active')
+		mediaSelectMovie.forEach((movie) => {
+			movie.classList.add('active')
+		})
 
 		// Remove active class from tv (mobile/desktop navbar)
 		mediaSelectTv.forEach((tv) => {
 			tv.classList.remove('active')
 		})
 
+		// scroll to top of window
+		window.scrollTo(0, 0)
 		// Refresh media
-		getMedia(constructRequestUrl())
+		if (search && search.value !== '') {
+			getMedia(constructRequestUrl(true, search.value))
+			search.value = ''
+		} else if (mobileSearch && mobileSearch.value !== '') {
+			getMedia(constructRequestUrl(true, mobileSearch.value))
+			mobileSearch.value = ''
+		} else {
+			getMedia(constructRequestUrl())
+		}
 	})
 })
 mediaSelectTv.forEach((item) => {
 	// Add click event to both desktop/mobile navbar tv options
 	item.addEventListener('click', () => {
-		currentMedia = mediaTypes.tv
+		optCurrentMedia = mediaTypes.tv
 		// Add active class
-		item.classList.add('active')
+		mediaSelectTv.forEach((tv) => {
+			tv.classList.add('active')
+		})
 
 		// Remove active class from movie (mobile/desktop navbar)
 		mediaSelectMovie.forEach((movie) => {
 			movie.classList.remove('active')
 		})
 
-		getMedia(constructRequestUrl())
+		window.scrollTo(0, 0)
+		if (search && search.value !== '') {
+			getMedia(constructRequestUrl(true, search.value))
+			search.value = ''
+		} else if (mobileSearch && mobileSearch.value !== '') {
+			getMedia(constructRequestUrl(true, mobileSearch.value))
+			mobileSearch.value = ''
+		} else {
+			getMedia(constructRequestUrl())
+		}
 	})
 })
 
-// Get media on page load
+filters.addEventListener('submit', (e) => {
+	e.preventDefault()
+
+	optFilters.rating.min = minRating.value
+	optFilters.rating.max = maxRating.value
+
+	getMedia(constructRequestUrl())
+})
+
+const order = document.getElementById('sortingOrder')
+const comboBox = document.getElementById('sortingSelect')
+comboBox.addEventListener('click', (e) => {
+	optSortBy = e.target.value + '.' + order.value
+	console.log(optSortBy)
+
+	getMedia(constructRequestUrl())
+})
+order.addEventListener('click', (e) => {
+	optSortBy = comboBox.value + '.' + e.target.value
+	console.log(optSortBy)
+
+	getMedia(constructRequestUrl())
+})
+
+// Get media on optoptPage load
 getMedia(constructRequestUrl())

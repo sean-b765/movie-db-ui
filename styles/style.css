@@ -260,8 +260,8 @@ header .mobile-menu-opener .bar {
   height: 2px;
   -webkit-transform: translateY(-1px);
           transform: translateY(-1px);
-  -webkit-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
 }
 
 header .mobile-menu-opener::after, header .mobile-menu-opener::before {
@@ -270,8 +270,8 @@ header .mobile-menu-opener::after, header .mobile-menu-opener::before {
   height: 2px;
   width: 40%;
   background: #161a1d;
-  -webkit-transition: all 0.25s ease;
-  transition: all 0.25s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 header .mobile-menu-opener::after {
@@ -415,6 +415,289 @@ header .mob-menu-wrapper #mob-search .search {
   }
 }
 
+section.filters {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 8rem 1rem 2rem 1rem;
+  background: #161a1d;
+}
+
+section.filters .container {
+  width: 100%;
+  background: #a4161a;
+  border-radius: 5px;
+  padding: 1rem 1rem 0rem 1rem;
+}
+
+section.filters form#filters {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 100%;
+}
+
+section.filters form#filters button {
+  border: 1px solid #161a1d;
+  background: none;
+  padding: 10px 25px;
+  border-radius: 30px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 1px;
+  margin: 1rem 0rem 1rem 1rem;
+  -ms-flex-item-align: end;
+      -ms-grid-row-align: end;
+      align-self: end;
+}
+
+section.filters form#filters button:hover {
+  color: #a4161a;
+  background: #161a1d;
+}
+
+section.filters form#filters .field-wrapper {
+  position: relative;
+  height: 50px;
+  width: 100%;
+  border: 1px solid #161a1d;
+  cursor: pointer;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+
+section.filters form#filters .field-wrapper:not(:last-of-type) {
+  border-bottom: 0;
+}
+
+section.filters form#filters .field-wrapper .field-container {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  max-width: 100%;
+  overflow: hidden;
+  height: 0;
+  padding: 0;
+  opacity: 0;
+  top: 50px;
+  -webkit-transition: all 0.4s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  transition: all 0.4s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  z-index: 1;
+  cursor: auto;
+  margin: 1rem;
+}
+
+section.filters form#filters .field-wrapper .field-container .text {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  text-align: center;
+}
+
+section.filters form#filters .field-wrapper .field-container input[type='range'] {
+  -webkit-box-flex: 6;
+      -ms-flex: 6;
+          flex: 6;
+}
+
+section.filters form#filters .field-wrapper .field-container input.value {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  width: 50px;
+  padding: 5px 8px;
+  text-align: center;
+  background: #dbeeda;
+  border: none;
+  color: #161a1d;
+  border-radius: 5px;
+  margin-left: 0.5rem;
+  font-size: 1rem;
+}
+
+@media screen and (max-width: 28rem) {
+  section.filters form#filters .field-wrapper .field-container {
+    margin: 0.5rem;
+  }
+  section.filters form#filters .field-wrapper .field-container .text {
+    display: none;
+  }
+}
+
+section.filters form#filters .field-wrapper.open {
+  height: 170px;
+}
+
+section.filters form#filters .field-wrapper.open .expand {
+  height: 50px;
+}
+
+section.filters form#filters .field-wrapper.open .field-container {
+  top: 50px;
+  height: auto;
+  opacity: 1;
+}
+
+section.filters form#filters .field-wrapper.open .field-header .expand::after {
+  -webkit-transform: scaleX(2) rotate(0deg);
+          transform: scaleX(2) rotate(0deg);
+}
+
+section.filters form#filters .field-wrapper .field-header {
+  background: rgba(0, 0, 0, 0.07);
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 50px;
+  top: 0;
+  width: 100%;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+section.filters form#filters .field-wrapper .field-header .checkbox {
+  position: absolute;
+  right: 0;
+}
+
+section.filters form#filters .field-wrapper .field-header:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+section.filters form#filters .field-wrapper .field-header .text {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: -25px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  content: attr(data-text);
+}
+
+section.filters form#filters .field-wrapper .field-header .expand {
+  position: relative;
+  width: 50px;
+  height: calc(100% - 1px);
+  font-weight: 900;
+}
+
+section.filters form#filters .field-wrapper .field-header .expand::after {
+  content: '^';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+  -webkit-transform: scaleX(2) rotate(180deg);
+          transform: scaleX(2) rotate(180deg);
+}
+
+@media screen and (max-width: 38rem) {
+  section.filters {
+    padding-top: 5.5rem;
+  }
+}
+
+.checkbox {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  font-size: 22px;
+  height: 30px;
+  width: 55px;
+  margin: 10px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox input:checked ~ .real-check {
+  background-color: #161a1d;
+}
+
+.checkbox input:checked ~ .real-check::after {
+  background: #f01d24;
+  left: calc(100% - 2px);
+  -webkit-transform: translateX(-100%);
+          transform: translateX(-100%);
+}
+
+.checkbox .real-check {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 30px;
+  background-color: #161a1d;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+
+.checkbox .real-check::after {
+  position: absolute;
+  content: '';
+  border-radius: 50%;
+  left: 2px;
+  top: 2px;
+  height: 26px;
+  width: 26px;
+  background: #910005ab;
+  -webkit-transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
 * {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -441,7 +724,139 @@ main {
   -webkit-box-pack: space-evenly;
       -ms-flex-pack: space-evenly;
           justify-content: space-evenly;
-  padding: 7rem 1rem 2rem 1rem;
+  padding: 2rem 1rem 2rem 1rem;
   min-height: 100vh;
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
+  width: 100%;
+  height: 8px;
+  background: #8a1212;
+  border-radius: 10px;
+  outline: none;
+  opacity: 1;
+  -webkit-transition: 0.2s;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #dbeeda;
+  border: 3px solid #161a1d;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  background: #dbeeda;
+  border-radius: 50%;
+  border: 3px solid #161a1d;
+  cursor: pointer;
+}
+
+section.sort {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 1rem;
+  background: #161a1d;
+}
+
+section.sort .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #a4161a;
+  padding: 1rem;
+  border-radius: 0.3rem;
+  /* Select taken from Raul Barrera https://codepen.io/raubaca/pen/VejpQP */
+  /* Remove IE arrow */
+  /* Custom Select */
+}
+
+section.sort .container .params {
+  width: 100%;
+}
+
+section.sort .container select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border: 0 !important;
+  background: #161a1d;
+  background-image: none;
+}
+
+section.sort .container select::-ms-expand {
+  display: none;
+}
+
+section.sort .container .select {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  height: 3em;
+  line-height: 3;
+  background: #161a1d;
+  overflow: hidden;
+  border-radius: 0.25em;
+  margin-top: 0.5rem;
+}
+
+section.sort .container .select * {
+  font-family: 'Poppins', sans-serif;
+}
+
+section.sort .container .select select {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  padding: 0 0.5em;
+  color: #dbeeda;
+  cursor: pointer;
+}
+
+section.sort .container .select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  background: #161a1d;
+  cursor: pointer;
+  pointer-events: none;
+  -webkit-transition: 0.25s all ease;
+  transition: 0.25s all ease;
+}
+
+section.sort .container .select:hover::after {
+  color: #a4161a;
 }
 /*# sourceMappingURL=style.css.map */

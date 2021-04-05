@@ -1,0 +1,51 @@
+.checkbox {
+	display: block;
+	position: relative;
+	cursor: pointer;
+	font-size: 22px;
+	height: 30px;
+	width: 55px;
+	margin: 10px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+	}
+	input:checked ~ .real-check {
+		background-color: $primary-color;
+		&::after {
+			background: #f01d24;
+			left: calc(100% - 2px);
+			transform: translateX(-100%);
+		}
+	}
+	.real-check {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		border-radius: 30px;
+		background-color: $primary-color;
+		transition: all 0.25s ease;
+
+		&::after {
+			position: absolute;
+			content: '';
+			border-radius: 50%;
+			left: 2px;
+			top: 2px;
+			height: 26px;
+			width: 26px;
+			background: #910005ab;
+			transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		}
+	}
+}

@@ -50,8 +50,74 @@
     </div>
   </header>
 
+  <section class="filters">
+    <div class="container">
+      <form id="filters">
+        <div class="field-wrapper" data-text="Rating">
+          <div class="field-header">
+            <div class="expand"></div>
+            <div class="text">Rating</div>
+            <label class="checkbox" alt="Use rating filter?">
+              <input type="checkbox" id="doRatingFilter">
+              <div class="real-check"></div>
+            </label>
+          </div>
+
+          <div class="field-container">
+            <div class="text">Min</div>
+            <input type="range" class="min" min="0.0" max="10" value="0" step="0.1">
+            <input type="text" value="0" id="minRating" class="value min">
+          </div>
+          
+          <div class="field-container">
+            <div class="text">Max</div>
+            <input type="range" class="max" min="0.0" max="10" value="10" step="0.1">
+            <input type="text" value="0" class="value max" id="maxRating">
+          </div>
+        </div>
+
+        <div class="field-wrapper" data-text="Release Year">
+          <div class="field-header">
+            <div class="expand"></div>
+            <div class="text">Release Year</div>
+            <label class="checkbox" alt="Use year filter?">
+              <input type="checkbox" id="doYearFilter">
+              <div class="real-check"></div>
+            </label>
+          </div>
+
+          <div class="field-container">
+            <input type="range" class="min" min='1900' max='2021'>
+            <input type="text" value="0" id="release" class="value">
+          </div>
+        </div>
+        <button>Apply Filters</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="sort">
+    <div class="container">
+      <div class="text">Sort</div>
+      <div class="params">
+        <div class="select">
+          <select id="sortingSelect">
+            <option selected value="popularity">Popularity</option>            
+          </select>
+        </div>
+        <div class="select">
+          <select id="sortingOrder">
+            <option selected value="desc">High->Low</option>
+            <option value="asc">Low->High</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <main id="main"></main>
 
+  <script src="scripts/refineSearch.js" type="module"></script>
   <script src="scripts/main.js" type="module"></script>
 </body>
 </html>
