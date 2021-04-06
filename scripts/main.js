@@ -3,17 +3,7 @@ import { mobileMenu, mobileMenuOpener } from './header.js'
 const API_KEY = '6a2ae44babf3ff78b6e4d09363704281'
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/w1280'
 
-const form = document.getElementById('form')
-const search = form.querySelector('#search')
-const mobileForm = document.getElementById('mob-search')
-const mobileSearch = mobileForm.querySelector('#search')
-
-const filters = document.getElementById('filters')
-
 const main = document.getElementById('main')
-
-const mediaSelectMovie = document.querySelectorAll('.media-select.movies')
-const mediaSelectTv = document.querySelectorAll('.media-select.tv')
 
 /* Filters */
 const release = document.getElementById('release')
@@ -39,7 +29,7 @@ let optFilters = {
 	},
 	releaseDate: 0,
 }
-//
+// Default options
 
 /**
  * Get a request URL with parameters
@@ -108,6 +98,16 @@ function showMedia(medias) {
 		main.appendChild(mediaElement)
 	})
 }
+
+const mediaSelectMovie = document.querySelectorAll('.media-select.movies')
+const mediaSelectTv = document.querySelectorAll('.media-select.tv')
+
+const form = document.getElementById('form')
+const search = document.getElementById('search-desktop')
+const mobileForm = document.getElementById('mob-search')
+const mobileSearch = document.getElementById('search-mobile')
+
+const filters = document.getElementById('filters')
 
 // Mobile/desktop search bar
 mobileForm.addEventListener('submit', (e) => {
@@ -209,20 +209,21 @@ filters.addEventListener('submit', (e) => {
 	getMedia(constructRequestUrl())
 })
 
+/*
+	Change out optSortBy variable on select click/change, fetch media 
+*/
 const order = document.getElementById('sortingOrder')
 const comboBox = document.getElementById('sortingSelect')
-comboBox.addEventListener('click', (e) => {
+
+comboBox.addEventListener('change', (e) => {
 	optSortBy = e.target.value + '.' + order.value
-	console.log(optSortBy)
 
 	getMedia(constructRequestUrl())
 })
-order.addEventListener('click', (e) => {
+order.addEventListener('change', (e) => {
 	optSortBy = comboBox.value + '.' + e.target.value
-	console.log(optSortBy)
 
 	getMedia(constructRequestUrl())
 })
-
-// Get media on optoptPage load
+// Get media on page load
 getMedia(constructRequestUrl())
