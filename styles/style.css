@@ -425,7 +425,7 @@ section.filters {
 
 section.filters .container {
   width: 100%;
-  background: #88090d;
+  background: #b9181e;
   border-radius: 5px;
   padding: 1rem 1rem 0rem 1rem;
 }
@@ -760,7 +760,7 @@ section.sort .container {
           flex-direction: column;
   width: 100%;
   height: 100%;
-  background: #88090d;
+  background: #b9181e;
   padding: 1rem;
   border-radius: 0.3rem;
   /* Select taken from Raul Barrera https://codepen.io/raubaca/pen/VejpQP */
@@ -837,7 +837,7 @@ section.sort .container .select::after {
 }
 
 section.sort .container .select:hover::after {
-  color: #88090d;
+  color: #b9181e;
 }
 
 * {
