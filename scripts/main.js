@@ -1,4 +1,5 @@
 import { mobileMenu, mobileMenuOpener } from './header.js'
+import { disableScroll, enableScroll } from './handleScroll.js'
 
 const API_KEY = '6a2ae44babf3ff78b6e4d09363704281'
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/w1280'
@@ -33,7 +34,6 @@ const minRating = document.getElementById('minRating')
 const maxRating = document.getElementById('maxRating')
 const checkboxRating = document.getElementById('doRatingFilter')
 const checkboxAdult = document.getElementById('doIncludeAdult')
-const checkboxMulti = document.getElementById('doMultiSearch')
 
 const mediaTypes = {
 	movie: 'movie',
@@ -56,6 +56,8 @@ let optFilters = {
 }
 //
 
+let CURRENT_MEDIA = null
+
 // Reset, called after deleting search term
 const reset = () => {
 	optSearchTerm = ''
@@ -75,6 +77,7 @@ const reset = () => {
 	hideSortFilter(false)
 }
 
+// Set the clickable pages at the end of the page
 const pages = document.getElementById('pages')
 const setPages = () => {
 	pages.innerHTML = ''
@@ -89,10 +92,10 @@ const setPages = () => {
 	}
 	values.forEach((val) => {
 		if (val === optPage) {
-			elem.innerHTML += `<span class="page active-page">${val}</span>`
+			elem.innerHTML += `<button class="page active-page">${val}</button>`
 			return true
 		}
-		elem.innerHTML += `<span class="page">${val}</span>`
+		elem.innerHTML += `<button class="page">${val}</button>`
 	})
 
 	pages.appendChild(elem)
@@ -109,6 +112,7 @@ const setPages = () => {
 	})
 }
 
+// When searching, sort/filter should hide as themoviedb doesn't allow search filters
 const hideSortFilter = (hide = true) => {
 	if (hide) {
 		filterSection.style.display = 'none'
@@ -146,11 +150,6 @@ const constructRequestUrl = (searching = false, searchTerm = '') => {
 
 	// set the sorting
 	let sort = `&sort_by=${optSortBy}`
-
-	// set the media if the Movies&Tv is toggled on
-	if (checkboxMulti.checked) {
-		optCurrentMedia = mediaTypes.multi
-	}
 
 	// If searching was specified, set the searchTerm option and reset the page
 	//  Searching is true after submitting a search query in the search bar
@@ -192,7 +191,7 @@ function showMedia(medias) {
 	main.innerHTML = ''
 
 	medias.forEach((media) => {
-		const { name, title, poster_path, vote_average, overview } = media
+		const { name, title, poster_path, vote_average } = media
 
 		const mediaElement = document.createElement('div')
 		mediaElement.classList.add('media')
@@ -212,9 +211,64 @@ function showMedia(medias) {
 				vote_average > 5 ? (vote_average > 8 ? 'green' : 'yellow') : 'red'
 			}">${vote_average}</span>			
     `
+
+		const btn = document.createElement('button')
+		btn.classList.add('circle')
+		btn.addEventListener('click', () => {
+			CURRENT_MEDIA = media
+			console.log(CURRENT_MEDIA)
+			showPopup()
+		})
+
+		const info = mediaElement.querySelector('.info')
+		info.appendChild(btn)
+
 		main.appendChild(mediaElement)
 	})
 }
+
+const popupDiv = document.getElementById('popup')
+function showPopup() {
+	disableScroll()
+	popupDiv.classList.add('open')
+	const container = popupDiv.getElementsByClassName('container')[0]
+	container.innerHTML = `
+		<div class="banner">
+			<img src="${
+				IMAGE_PATH +
+				(CURRENT_MEDIA.backdrop_path
+					? CURRENT_MEDIA.backdrop_path
+					: CURRENT_MEDIA.poster_path)
+			}"></img>
+		</div>
+		<h3 class="title">${
+			CURRENT_MEDIA.title ? CURRENT_MEDIA.title : CURRENT_MEDIA.name
+		}</h3>
+		<p class="overview">${CURRENT_MEDIA.overview}</p>
+		<div class="votes">
+			<span class="average">
+				<i class="fas fa-fire"></i>
+				<span class="${
+					CURRENT_MEDIA.vote_average > 5
+						? CURRENT_MEDIA.vote_average > 8
+							? 'green'
+							: 'yellow'
+						: 'red'
+				}">${CURRENT_MEDIA.vote_average}</span>
+			</span>
+			<span class="total">
+				<i class="fas fa-user"></i>
+				<span class="count">${CURRENT_MEDIA.vote_count}</span>
+			</span>
+		</div>
+	`
+}
+
+const popupClose = document.getElementById('popup-close-icon')
+popupClose.addEventListener('click', () => {
+	enableScroll()
+	popupDiv.classList.remove('open')
+})
 
 // Mobile/desktop search bar
 mobileForm.addEventListener('submit', (e) => {
@@ -309,6 +363,7 @@ mediaSelectTv.forEach((item) => {
 	})
 })
 
+// Apply filter button should set filter variables
 filters.addEventListener('submit', (e) => {
 	e.preventDefault()
 
@@ -336,11 +391,14 @@ order.addEventListener('change', (e) => {
 	getMedia(constructRequestUrl())
 })
 
+// The box which shows what you searched for,
+//  Clicking it will make stop the search
 searchTermBox.addEventListener('click', () => {
 	optSearchTerm = ''
 	reset()
 })
 
+// Drop down sort/filters
 filtersTextToOpen.addEventListener('click', () => {
 	if (filtersToOpen.classList.contains('open')) {
 		filtersToOpen.classList.remove('open')
