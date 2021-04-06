@@ -1,13 +1,55 @@
 section.filters {
 	display: flex;
-	padding: 2rem 1rem 2rem 1rem;
+	padding: 1rem 1rem 1rem 1rem;
 	background: $primary-color;
+	display: flex;
+	justify-content: center;
+	align-items: start;
+	flex-direction: column;
+	> .text {
+		position: relative;
+		text-align: center;
+		background: $secondary-color;
+		width: 100%;
+		padding: 1rem 2rem 1rem 2rem;
+		border-radius: 5px;
+		cursor: pointer;
+		&::after {
+			content: 'v';
+			position: absolute;
+			width: 30px;
+			height: 30px;
+			top: 50%;
+			left: calc(100% - 40px);
+			transition: all 0.25s ease;
+			transform: translate(-100%, -50%) scaleX(2) rotate(0deg);
+		}
+	}
+	&.open {
+		> .text {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+			&::after {
+				transform: translate(-100%, -50%) scaleX(2) rotate(180deg);
+			}
+		}
+		.container {
+			display: flex;
+			opacity: 1;
+		}
+	}
 
 	.container {
 		width: 100%;
+		opacity: 0;
+		transition: opacity 0.5s ease;
 		background: $secondary-color2;
-		border-radius: 5px;
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
 		padding: 1rem 1rem 0rem 1rem;
+		display: none;
+		align-items: center;
+		flex-direction: column;
 	}
 
 	form#filters {
@@ -146,10 +188,16 @@ section.filters {
 					}
 				}
 			}
+			.field-toggle {
+				background: rgba($color: #000000, $alpha: 0.07);
+				display: flex;
+				width: 100%;
+				align-items: center;
+				justify-content: end;
+				.checkbox {
+					align-self: flex-end;
+				}
+			}
 		}
-	}
-
-	@media screen and (max-width: $tablet-width-bounds) {
-		padding-top: 5.5rem;
 	}
 }

@@ -18,7 +18,6 @@
         <ul>
           <li class="media-select movies active">Movies</li>
           <li class="media-select tv">TV</li>
-          <li>Genres</li>
         </ul>
       </div>
 
@@ -30,47 +29,46 @@
         <div class="icon mobile"></div>
         
         <form id="mob-search">
-          <input type="text" id="search" class="search" placeholder="Search">
+          <input type="text" id="search-mobile" class="search" placeholder="Search">
         </form>
 
         <ul>
           <li class="media-select movies active">Movies</li>
           <li class="media-select tv">TV</li>
-          <li>Genres</li>
         </ul>
         
       </div>
     </div>
 
     <form id="form">
-      <input type="text" id="search" class="search" placeholder="Search">
+      <input type="text" id="search-desktop" class="search" placeholder="Search">
     </form>
     <div class="mobile-menu-opener">
       <div class="bar"></div>
     </div>
   </header>
-
+  
   <section class="sort">
+    <div class="text">Sort</div>
     <div class="container">
-      <div class="text">Sort</div>
       <div class="params">
         <div class="select">
           <select id="sortingSelect">
-            <option selected value="popularity">Popularity</option>            
+            <option selected value="popularity">Popularity</option>
           </select>
         </div>
         <div class="select">
           <select id="sortingOrder">
-            <option selected value="desc">High->Low</option>
-            <option value="asc">Low->High</option>
+            <option selected value="desc">High - Low</option>
+            <option value="asc">Low - High</option>
           </select>
         </div>
       </div>
-      <button class="round">Apply</button>
     </div>
   </section>
 
   <section class="filters">
+    <div class="text">Filters</div>
     <div class="container">
       <form id="filters">
         <div class="field-wrapper" data-text="Rating">
@@ -82,20 +80,17 @@
               <div class="real-check"></div>
             </label>
           </div>
-
           <div class="field-container">
             <div class="text">Min</div>
             <input type="range" class="min" min="0.0" max="10" value="0" step="0.1">
             <input type="text" value="0" id="minRating" class="value min">
           </div>
-          
           <div class="field-container">
             <div class="text">Max</div>
             <input type="range" class="max" min="0.0" max="10" value="10" step="0.1">
             <input type="text" value="0" class="value max" id="maxRating">
           </div>
         </div>
-
         <div class="field-wrapper" data-text="Release Year">
           <div class="field-header">
             <div class="expand"></div>
@@ -105,10 +100,29 @@
               <div class="real-check"></div>
             </label>
           </div>
-
           <div class="field-container">
             <input type="range" class="min" min='1900' max='2021'>
             <input type="text" value="0" id="release" class="value">
+          </div>
+        </div>
+        <!-- Include Adult checkbox -->
+        <div class="field-wrapper">
+          <div class="field-toggle">
+            <div class="text">Include Adult</div>
+            <label class="checkbox" alt="Include adult content?">
+              <input type="checkbox" id="doIncludeAdult">
+              <div class="real-check"></div>
+            </label>
+          </div>
+        </div>
+        <!-- Search all movies,tv -->
+        <div class="field-wrapper">
+          <div class="field-toggle">
+            <div class="text">Movies & TV</div>
+            <label class="checkbox" alt="Search movies and tv">
+              <input type="checkbox" id="doMultiSearch">
+              <div class="real-check"></div>
+            </label>
           </div>
         </div>
         <button class="round">Apply Filters</button>
@@ -116,9 +130,18 @@
     </div>
   </section>
 
-  
+  <section class="search-term">
+    <div class="search">
+      <div class="text"></div>
+      <div class="close"></div>
+    </div>
+  </section>
 
   <main id="main"></main>
+
+  <div id="pages">
+
+  </div>
 
   <script src="scripts/refineSearch.js" type="module"></script>
   <script src="scripts/main.js" type="module"></script>

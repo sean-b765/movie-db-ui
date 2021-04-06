@@ -108,7 +108,6 @@ filterValues.forEach((item) => {
 const validFilters = [
 	{ release_date: 'Release Date' },
 	{ revenue: 'Box Office' },
-	{ primary_release_date: 'First Release' },
 	{ vote_average: 'Rating' },
 	{ vote_count: 'Rating Count' },
 ]

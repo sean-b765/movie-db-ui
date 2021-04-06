@@ -37,3 +37,88 @@ main {
 	padding: 2rem 1rem 2rem 1rem;
 	min-height: 100vh;
 }
+
+#pages {
+	width: 100%;
+	height: auto;
+	padding: 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	.page-selection {
+		max-width: calc(min(50%, 10rem));
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+
+		.page {
+			padding: 1rem;
+			cursor: pointer;
+			color: $primary-color;
+			transition: all 0.25s ease;
+
+			&.active-page {
+				color: $accent-light;
+			}
+
+			&:hover {
+				color: $accent-light;
+			}
+		}
+	}
+}
+
+section.search-term {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 1rem;
+	background: $primary-color;
+	display: none;
+	.search {
+		background: $secondary-color;
+		width: calc(min(30rem, 90%));
+		height: 3rem;
+		border-radius: 2rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		position: relative;
+		transition: all 0.4s ease;
+		cursor: pointer;
+
+		&:hover {
+			background: $secondary-color2;
+		}
+
+		.text {
+			font-family: 'Poppins', sans-serif;
+			margin-inline: 1rem;
+			color: $accent-light;
+		}
+
+		.close {
+			position: relative;
+			right: 10px;
+			border-radius: 50%;
+			height: 3rem;
+			width: 5rem;
+
+			&::after {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				content: 'x';
+				position: absolute;
+				width: 100%;
+				left: 0;
+				top: 0;
+				height: 100%;
+				transform: scaleX(2) translateY(-1px);
+				color: $accent-light;
+			}
+		}
+	}
+}

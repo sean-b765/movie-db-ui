@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&display=swap");
 .media {
   width: 15rem;
-  height: 30rem;
+  height: auto;
   margin: 1rem;
   -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
           box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
@@ -9,55 +9,86 @@
   overflow: hidden;
   border-radius: 0.3rem;
   background-color: #a4161a;
+  cursor: pointer;
 }
 
 .media img {
   width: 100%;
+  -webkit-transition: all 0.6s ease-out;
+  transition: all 0.6s ease-out;
+}
+
+.media:hover img {
+  scale: 1.1;
+}
+
+.media:hover .info {
+  top: 0;
+  opacity: 1;
+  height: 100%;
 }
 
 .media .info {
+  opacity: 0;
   color: #eee;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   padding: 0.5rem 1rem 1rem;
   letter-spacing: 0.5px;
   position: absolute;
   bottom: 0;
   width: 100%;
-  background: #a4161a;
+  background: rgba(255, 255, 255, 0.712);
+  height: 0;
+  top: 50%;
+  -webkit-transition: all 0.35s cubic-bezier(0.39, 0.575, 0.565, 1);
+  transition: all 0.35s cubic-bezier(0.39, 0.575, 0.565, 1);
 }
 
 .media .info h3 {
   margin: 0;
-  height: 100%;
+  text-align: center;
+  color: #161a1d;
+  text-transform: uppercase;
+  font-weight: 900;
 }
 
-.media .info span {
+.media span {
+  position: absolute;
   background-color: #161a1d;
   padding: 0.25rem 0.5rem;
   border-radius: 3px;
   font-weight: bold;
   -ms-flex-item-align: end;
       align-self: flex-end;
-  margin-left: 0.4rem;
+  -ms-grid-column-align: end;
+      justify-self: end;
+  bottom: 15px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
 }
 
-.media .info span.green {
+.media span.green {
   color: rgba(98, 221, 98, 0.829);
 }
 
-.media .info span.yellow {
+.media span.yellow {
   color: rgba(218, 175, 35, 0.972);
 }
 
-.media .info span.red {
+.media span.red {
   color: rgba(240, 74, 74, 0.924);
 }
 
@@ -74,11 +105,6 @@
           transform: translateY(101%);
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-}
-
-.media:hover .overview {
-  -webkit-transform: translateY(0%);
-          transform: translateY(0%);
 }
 
 @media screen and (max-width: 28rem) {
@@ -419,15 +445,78 @@ section.filters {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding: 2rem 1rem 2rem 1rem;
+  padding: 1rem 1rem 1rem 1rem;
   background: #161a1d;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: start;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+section.filters > .text {
+  position: relative;
+  text-align: center;
+  background: #a4161a;
+  width: 100%;
+  padding: 1rem 2rem 1rem 2rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+section.filters > .text::after {
+  content: 'v';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 50%;
+  left: calc(100% - 40px);
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+  -webkit-transform: translate(-100%, -50%) scaleX(2) rotate(0deg);
+          transform: translate(-100%, -50%) scaleX(2) rotate(0deg);
+}
+
+section.filters.open > .text {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+section.filters.open > .text::after {
+  -webkit-transform: translate(-100%, -50%) scaleX(2) rotate(180deg);
+          transform: translate(-100%, -50%) scaleX(2) rotate(180deg);
+}
+
+section.filters.open .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  opacity: 1;
 }
 
 section.filters .container {
   width: 100%;
+  opacity: 0;
+  -webkit-transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease;
   background: #b9181e;
-  border-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   padding: 1rem 1rem 0rem 1rem;
+  display: none;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 section.filters form#filters {
@@ -620,10 +709,23 @@ section.filters form#filters .field-wrapper .field-header .expand::after {
           transform: scaleX(2) rotate(180deg);
 }
 
-@media screen and (max-width: 38rem) {
-  section.filters {
-    padding-top: 5.5rem;
-  }
+section.filters form#filters .field-wrapper .field-toggle {
+  background: rgba(0, 0, 0, 0.07);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
+}
+
+section.filters form#filters .field-wrapper .field-toggle .checkbox {
+  -ms-flex-item-align: end;
+      align-self: flex-end;
 }
 
 .checkbox {
@@ -736,18 +838,133 @@ button.round:hover {
   background: #161a1d;
 }
 
+/* Select taken from Raul Barrera https://codepen.io/raubaca/pen/VejpQP */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border: 0 !important;
+  background: #161a1d;
+  background-image: none;
+}
+
+/* Remove IE arrow */
+select::-ms-expand {
+  display: none;
+}
+
+/* Custom Select */
+.select {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  height: 3em;
+  line-height: 3;
+  background: #161a1d;
+  overflow: hidden;
+  border-radius: 0.25em;
+  margin-top: 0.5rem;
+}
+
+.select * {
+  font-family: 'Poppins', sans-serif;
+}
+
+.select select {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  padding: 0 0.5em;
+  color: #dbeeda;
+  cursor: pointer;
+}
+
+.select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  background: #161a1d;
+  cursor: pointer;
+  pointer-events: none;
+  -webkit-transition: 0.25s all ease;
+  transition: 0.25s all ease;
+  color: #dbeeda;
+}
+
+.select:hover::after {
+  color: #b9181e;
+}
+
 section.sort {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding: 9rem 1rem 0 1rem;
+  padding: 8rem 1rem 0 1rem;
   background: #161a1d;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
-section.sort .container {
+section.sort > .text {
+  position: relative;
+  text-align: center;
+  background: #a4161a;
+  width: 100%;
+  padding: 1rem 2rem 1rem 2rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+section.sort > .text::after {
+  content: 'v';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 50%;
+  left: calc(100% - 40px);
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+  -webkit-transform: translate(-100%, -50%) scaleX(2) rotate(0deg);
+          transform: translate(-100%, -50%) scaleX(2) rotate(0deg);
+}
+
+section.sort.open > .text {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+section.sort.open > .text::after {
+  -webkit-transform: translate(-100%, -50%) scaleX(2) rotate(180deg);
+          transform: translate(-100%, -50%) scaleX(2) rotate(180deg);
+}
+
+section.sort.open .container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  opacity: 1;
+}
+
+@media screen and (max-width: 38rem) {
+  section.sort {
+    padding-top: 5rem;
+  }
+}
+
+section.sort .container {
+  display: none;
+  opacity: 0;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -762,10 +979,8 @@ section.sort .container {
   height: 100%;
   background: #b9181e;
   padding: 1rem;
-  border-radius: 0.3rem;
-  /* Select taken from Raul Barrera https://codepen.io/raubaca/pen/VejpQP */
-  /* Remove IE arrow */
-  /* Custom Select */
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 section.sort .container button {
@@ -777,67 +992,6 @@ section.sort .container button {
 
 section.sort .container .params {
   width: 100%;
-}
-
-section.sort .container select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  outline: 0;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-  border: 0 !important;
-  background: #161a1d;
-  background-image: none;
-}
-
-section.sort .container select::-ms-expand {
-  display: none;
-}
-
-section.sort .container .select {
-  position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-  height: 3em;
-  line-height: 3;
-  background: #161a1d;
-  overflow: hidden;
-  border-radius: 0.25em;
-  margin-top: 0.5rem;
-}
-
-section.sort .container .select * {
-  font-family: 'Poppins', sans-serif;
-}
-
-section.sort .container .select select {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  padding: 0 0.5em;
-  color: #dbeeda;
-  cursor: pointer;
-}
-
-section.sort .container .select::after {
-  content: '\25BC';
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0 1em;
-  background: #161a1d;
-  cursor: pointer;
-  pointer-events: none;
-  -webkit-transition: 0.25s all ease;
-  transition: 0.25s all ease;
-}
-
-section.sort .container .select:hover::after {
-  color: #b9181e;
 }
 
 * {
@@ -868,5 +1022,127 @@ main {
           justify-content: space-evenly;
   padding: 2rem 1rem 2rem 1rem;
   min-height: 100vh;
+}
+
+#pages {
+  width: 100%;
+  height: auto;
+  padding: 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#pages .page-selection {
+  max-width: calc(min(50%, 10rem));
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#pages .page-selection .page {
+  padding: 1rem;
+  cursor: pointer;
+  color: #161a1d;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+
+#pages .page-selection .page.active-page {
+  color: #dbeeda;
+}
+
+#pages .page-selection .page:hover {
+  color: #dbeeda;
+}
+
+section.search-term {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 1rem;
+  background: #161a1d;
+  display: none;
+}
+
+section.search-term .search {
+  background: #a4161a;
+  width: calc(min(30rem, 90%));
+  height: 3rem;
+  border-radius: 2rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+  -webkit-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+section.search-term .search:hover {
+  background: #b9181e;
+}
+
+section.search-term .search .text {
+  font-family: 'Poppins', sans-serif;
+  margin-inline: 1rem;
+  color: #dbeeda;
+}
+
+section.search-term .search .close {
+  position: relative;
+  right: 10px;
+  border-radius: 50%;
+  height: 3rem;
+  width: 5rem;
+}
+
+section.search-term .search .close::after {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  content: 'x';
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  height: 100%;
+  -webkit-transform: scaleX(2) translateY(-1px);
+          transform: scaleX(2) translateY(-1px);
+  color: #dbeeda;
 }
 /*# sourceMappingURL=style.css.map */
