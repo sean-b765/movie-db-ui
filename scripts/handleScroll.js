@@ -39,18 +39,18 @@ const preventMouseWheelDown = (e) => {
 
 // call this to Disable
 export function disableScroll() {
-	window.addEventListener('DOMMouseScroll', preventDefault, false) // older FF
-	window.addEventListener(wheelEvent, preventDefault, wheelOpt) // modern desktop
-	window.addEventListener('touchmove', preventDefault, wheelOpt) // mobile
-	window.addEventListener('keydown', preventDefaultForScrollKeys, false)
-	window.addEventListener('mousedown', preventMouseWheelDown)
+	document.addEventListener('DOMMouseScroll', preventDefault, false) // older FF
+	document.addEventListener(wheelEvent, preventDefault, wheelOpt) // modern desktop
+	document.addEventListener('touchmove', preventDefault, wheelOpt) // mobile
+	document.addEventListener('keydown', preventDefaultForScrollKeys, false)
+	document.addEventListener('mousedown', preventMouseWheelDown)
 }
 
 // call this to Enable
 export function enableScroll() {
-	window.removeEventListener('DOMMouseScroll', preventDefault, false)
-	window.removeEventListener(wheelEvent, preventDefault, wheelOpt)
-	window.removeEventListener('touchmove', preventDefault, wheelOpt)
-	window.removeEventListener('keydown', preventDefaultForScrollKeys, false)
-	window.removeEventListener('mousedown', preventMouseWheelDown)
+	document.removeEventListener('DOMMouseScroll', preventDefault, false)
+	document.removeEventListener(wheelEvent, preventDefault, wheelOpt)
+	document.removeEventListener('touchmove', preventDefault, wheelOpt)
+	document.removeEventListener('keydown', preventDefaultForScrollKeys, false)
+	document.removeEventListener('mousedown', preventMouseWheelDown)
 }

@@ -1,0 +1,261 @@
+#popup {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: #312d2dfb;
+	z-index: 100;
+	top: -200vh;
+	left: 0;
+	transition: all 0.5s ease-in-out;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+
+	#popup-close-icon {
+		position: absolute;
+		top: 20px;
+		right: 20px;
+		width: 3.8rem;
+		height: 3.8rem;
+		cursor: pointer;
+		border-radius: 50%;
+		background: rgba(0, 0, 0, 0.315);
+
+		&:hover::after,
+		&:hover::before {
+			opacity: 0.6;
+		}
+
+		&::after,
+		&::before {
+			background: $accent-light;
+			content: '';
+			position: absolute;
+			width: 60%;
+			height: 60%;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			transition: all 0.4s ease;
+		}
+		&::after {
+			width: 2px;
+			transform: translate(-50%, -50%) rotate(45deg);
+		}
+		&::before {
+			width: 2px;
+			transform: translate(-50%, -50%) rotate(-45deg);
+		}
+	}
+
+	.container {
+		max-width: 100%;
+		width: 100%;
+		max-height: 100%;
+		height: 100%;
+		overflow-x: hidden;
+		overflow-y: auto;
+
+		.banner {
+			position: relative;
+			top: 0;
+			left: 0;
+			z-index: -1;
+			max-height: 30vh;
+			overflow: hidden;
+			img {
+				top: -50%;
+				width: 100%;
+				max-width: 100%;
+			}
+		}
+
+		.under-banner {
+			position: relative;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 100%;
+			max-width: calc(min(100%, 60rem));
+			padding: 1rem;
+		}
+
+		.top-info {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: flex-start;
+			flex-wrap: wrap;
+			width: 100%;
+			margin: 1rem;
+
+			.info-small {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: row;
+			}
+
+			.title {
+				position: relative;
+				text-transform: uppercase;
+				font-weight: 900;
+				margin: 1.2rem 1.4rem;
+				text-align: center;
+			}
+			.release {
+				opacity: 0.8;
+				font-size: 0.8rem;
+				margin: 0rem 2rem 0rem 2rem;
+			}
+			.classification {
+				margin: 1rem 0 1rem 2rem;
+				font-size: 0.8rem;
+				opacity: 0.95;
+				border-radius: 5px;
+				border: 1px solid $accent-light;
+				padding: 1px 5px;
+			}
+		}
+
+		.sub-info {
+			.votes {
+				position: relative;
+				display: flex;
+				flex-direction: row;
+				justify-content: end;
+				i {
+					margin: 0;
+				}
+				span {
+					margin: 0 1rem 0 1rem;
+					&.green {
+						color: rgba(98, 221, 98, 0.829);
+					}
+					&.yellow {
+						color: rgba(218, 175, 35, 0.972);
+					}
+					&.red {
+						color: rgba(240, 74, 74, 0.924);
+					}
+				}
+			}
+		}
+
+		.tag {
+			text-align: start;
+			margin-left: 2rem;
+			font-weight: normal;
+			opacity: 0.9;
+			font-style: italic;
+		}
+
+		.mobile-button {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			.round {
+				border: 1px solid $accent-light;
+				&:hover {
+					border: 1px solid $primary-color;
+					color: $primary-color;
+					background: $accent-light;
+				}
+			}
+		}
+
+		*:not(.exclude-margin) {
+			margin: 1rem;
+		}
+
+		*:not(.banner):not(img) {
+			color: $accent-light;
+		}
+
+		@media screen and (min-width: $tablet-width-bounds) {
+			.banner {
+				max-height: 45vh;
+			}
+			.mobile-button #btnViewPlot {
+				display: none;
+			}
+		}
+		@media screen and (max-width: $tablet-width-bounds) {
+			.overview {
+				display: none;
+			}
+		}
+		@media screen and (max-width: $mobile-width-bounds) {
+			.top-info {
+				justify-content: center;
+				margin-inline: 0;
+				flex-direction: column;
+			}
+			.tag {
+				text-align: center;
+				margin-left: 0;
+			}
+			.sub-info .votes {
+				justify-content: center;
+			}
+		}
+	}
+
+	.pane {
+		position: fixed;
+		width: 100vw;
+		height: 100vh;
+		background: $primary-color;
+		display: flex;
+		top: 0;
+		left: 200vw;
+		transition: all 0.5s ease;
+		padding: 2rem 1rem;
+		color: $accent-light;
+
+		.container {
+			margin: 5rem 2rem;
+		}
+
+		#info-close-icon {
+			position: absolute;
+			top: 20px;
+			right: 40px;
+			width: 3.8rem;
+			height: 3.8rem;
+			cursor: pointer;
+			border-radius: 50%;
+			background: $secondary-color;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 2rem;
+			transition: all 0.5s ease;
+
+			.bar {
+				line-height: 2rem;
+				font-size: 2rem;
+				transform: translate(1px, 0px) scale(1.1, 1.3) rotate(180deg);
+			}
+
+			&:hover {
+				opacity: 0.8;
+			}
+		}
+
+		&.open {
+			left: 0;
+		}
+
+		@media screen and (min-width: $tablet-width-bounds) {
+			width: 70vw;
+			&.open {
+				left: 30vw;
+			}
+		}
+	}
+
+	&.open {
+		top: 0;
+	}
+}

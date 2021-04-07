@@ -57,10 +57,11 @@
 			font-weight: 900;
 		}
 
-		button.circle {
+		button.popup {
 			position: absolute;
 			border: none;
 			height: 50%;
+			min-height: 5rem;
 			width: 100%;
 			font-family: 'Poppins', sans-serif;
 			font-weight: bolder;
