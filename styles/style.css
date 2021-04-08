@@ -1455,7 +1455,7 @@ main {
           align-items: center;
 }
 
-#pages .page-selection .page {
+#pages .page-selection button {
   padding: 1rem 1.2rem;
   cursor: pointer;
   color: #161a1d;
@@ -1467,11 +1467,11 @@ main {
   font-size: 1.2rem;
 }
 
-#pages .page-selection .page.active-page {
+#pages .page-selection button.active-page {
   color: #dbeeda;
 }
 
-#pages .page-selection .page:hover {
+#pages .page-selection button:hover {
   color: #dbeeda;
 }
 
