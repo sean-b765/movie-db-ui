@@ -1,5 +1,5 @@
 import { mobileMenu, mobileMenuOpener } from './header.js'
-import { disableScroll, enableScroll } from './handleScroll.js'
+import { enableScroll, disableScroll } from './handleScroll.js'
 
 const API_KEY = '6a2ae44babf3ff78b6e4d09363704281'
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/w1280'
@@ -97,7 +97,7 @@ const setPages = () => {
 	}
 	// Make the 'jump to first page' button
 	if (optPage > 3) {
-		elem.innerHTML += `<button class="skip skip-start" id="skipStart"><<</button>`
+		elem.innerHTML += `<button class="skip skip-start"><<</button>`
 	}
 	// Render the buttons to the page-selection div and apply active-page class to current
 	values.forEach((val) => {
@@ -116,7 +116,7 @@ const setPages = () => {
 
 	// Set the page to 1 for skip to start button click event
 	try {
-		const skipStart = document.getElementById('skipStart')
+		const skipStart = document.getElementsByClassName('skip-start')[0]
 		console.log(skipStart)
 		skipStart.addEventListener('click', () => {
 			optPage = 1
@@ -191,22 +191,6 @@ const constructRequestUrl = (
 	get_cast = false,
 	type = ''
 ) => {
-	console.log(
-		'searching:',
-		searching,
-		'\nsearchTerm:',
-		searchTerm,
-		'\nget:',
-		get,
-		'\ngetId:',
-		getId,
-		'\nget_classification:',
-		get_classification,
-		'\nget_cast:',
-		get_cast,
-		'\ntype:',
-		type
-	)
 	// set the filters based on the toggles
 	let filters = `${
 		checkboxRelease.checked ? `&primary_release_year=${release.value}` : ''
@@ -401,13 +385,20 @@ async function getMovieAgeClassification(id, mediaType = '') {
 	return data.results
 }
 
-async function getMovieCast(id) {
+/**
+ * Get cast/crew of movie
+ * @param {number} id
+ * @param {string} mediaType
+ * @returns {Object}
+ */
+async function getMovieCast(id, mediaType = '') {
 	// Last true-boolean indicates we are fetching the cast
-	const res = await fetch(constructRequestUrl(false, '', true, id, false, true))
+	const res = await fetch(
+		constructRequestUrl(false, '', true, id, false, true, mediaType)
+	)
 	const data = await res.json()
-	data.then((d) => {
-		console.log(d)
-	})
+
+	return data
 }
 
 /*
@@ -415,6 +406,12 @@ async function getMovieCast(id) {
  */
 const popupDiv = document.getElementById('popup')
 function showPopup(mediaType = '') {
+	// reset scroll of infoAreaContainer (cast/mobile-plot views)
+	infoAreaContainer.scrollTo(0, 0)
+
+	// Disable scroll on the body
+	disableScroll()
+
 	if (_loading) {
 		console.log('waiting for first task to complete')
 		return
@@ -517,7 +514,7 @@ function showPopup(mediaType = '') {
 			btnCast.id = 'btnViewCast'
 			btnCast.innerHTML = 'View Cast'
 			btnCast.addEventListener('click', () => {
-				showCastMobile(CURRENT_MEDIA.id)
+				showCast(CURRENT_MEDIA.id, mediaType)
 			})
 			buttons.appendChild(btnCast)
 
@@ -535,13 +532,88 @@ infoCloseButton.addEventListener('click', () => {
 })
 
 const infoAreaContainer = infoArea.querySelector('.container')
-const showCastMobile = (id) => {
+const showCast = (id, mediaType = '') => {
 	infoArea.classList.add('open')
-	console.log(_cast)
-	infoAreaContainer.innerHTML = `${_cast}`
+	infoAreaContainer.classList.remove('plot')
+	infoAreaContainer.classList.add('cast')
+	setLoading(true)
+
+	getMovieCast(id, mediaType).then((data) => {
+		setLoading(false)
+		const { cast, crew } = data
+
+		// Initialise
+		_cast = {
+			director: {},
+			cast: [],
+		}
+
+		// Get only the director first (if this is a movie)
+		try {
+			const result = crew.filter((obj) => {
+				return obj.job === 'Director'
+			})[0]
+
+			_cast.director = {
+				name: result.name,
+				img: result.profile_path,
+			}
+		} catch (Error) {}
+
+		// now push each person to the cast (max of 16 people)
+		cast.forEach((person) => {
+			if (_cast.cast.length > 15) return true
+
+			_cast.cast.push({
+				name: person.name,
+				role: person.character,
+				img: person.profile_path,
+			})
+		})
+
+		// render to DOM
+		infoAreaContainer.innerHTML = ''
+
+		// Only add director if it exists
+		if (_cast.director.name) {
+			infoAreaContainer.innerHTML += `
+			<div class='cast director'>
+				<img src='${
+					_cast.director.img
+						? IMAGE_PATH + _cast.director.img
+						: './img/default-user.png'
+				}' alt='Picture of ${_cast.director.name}'></img>
+				<div class='name'>
+					${_cast.director.name}
+				</div>
+				<div class='role'>
+					Director
+				</div>
+			</div>`
+		}
+
+		_cast.cast.forEach((member) => {
+			infoAreaContainer.innerHTML += `
+			<div class='cast member ${member.img ? 'with-image' : ''}'>
+				<img src='${
+					member.img ? IMAGE_PATH + member.img : './img/default-user.png'
+				}' alt='Picture of ${member.name}'></img>
+				<div class='name'>
+					${member.name}
+				</div>
+				<div class='role'>
+					${member.role}
+				</div>
+			</div>`
+		})
+	})
 }
 const showPlotMobile = () => {
 	infoArea.classList.add('open')
+
+	infoAreaContainer.classList.add('plot')
+	infoAreaContainer.classList.remove('cast')
+
 	infoAreaContainer.innerHTML = `${_overview}`
 }
 
@@ -551,6 +623,7 @@ const showPlotMobile = () => {
 const popupClose = document.getElementById('popup-close-icon')
 popupClose.addEventListener('click', () => {
 	popupDiv.classList.remove('open')
+	enableScroll()
 })
 
 /*
