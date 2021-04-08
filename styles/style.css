@@ -2,6 +2,7 @@
 .media {
   width: 15rem;
   height: auto;
+  max-height: 22rem;
   margin: 1rem;
   -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
           box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
