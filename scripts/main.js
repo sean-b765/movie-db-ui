@@ -146,6 +146,7 @@ const hideSortFilter = (hide = true) => {
  * @param {number} getId movie/tv show Id
  * @param {boolean} get_classification indicates if you are getting the classification
  * @param {boolean} get_cast indicates if you are getting the cast
+ * @param {string} type the media type. required to distinguish search results
  * @returns {string} Request URL
  */
 const constructRequestUrl = (
@@ -154,8 +155,25 @@ const constructRequestUrl = (
 	get = false,
 	getId = 0,
 	get_classification = false,
-	get_cast = false
+	get_cast = false,
+	type = ''
 ) => {
+	console.log(
+		'searching:',
+		searching,
+		'\nsearchTerm:',
+		searchTerm,
+		'\nget:',
+		get,
+		'\ngetId:',
+		getId,
+		'\nget_classification:',
+		get_classification,
+		'\nget_cast:',
+		get_cast,
+		'\ntype:',
+		type
+	)
 	// set the filters based on the toggles
 	let filters = `${
 		checkboxRelease.checked ? `&primary_release_year=${release.value}` : ''
@@ -168,42 +186,74 @@ const constructRequestUrl = (
 	// set the sorting
 	let sort = `&sort_by=${optSortBy}`
 
-	// If searching was specified, set the searchTerm option and reset the page
+	// If searching was specified, retain the searchTerm option and reset the page
 	//  Searching is true after submitting a search query in the search bar
 	if (searching) {
 		optSearchTerm = searchTerm
 		optPage = 1
 	}
-	// If set retain the searchTerm as it's probably had filters applied, or a page was clicked
+
+	// If still viewing a search
 	if (optSearchTerm !== '') {
 		filters = ''
 		sort = ''
-		optCurrentMedia = mediaTypes.multi
 		hideSortFilter()
+		// Make the search term URL friendly (spaces will be replaced with %20)
 		searchTerm = optSearchTerm.replaceAll(' ', '%20')
-		return `https://api.themoviedb.org/3/search/${optCurrentMedia}?api_key=${API_KEY}${filters}${sort}&page=${optPage}&query=${searchTerm}`
+
+		// If the type is specified, user clicked on a search result
+		if (type !== '') {
+			if (get_classification) {
+				// Get the classification of the result (age rating)
+				console.log('Retrieving search result age rating')
+				// Movies age rating can be retrieved using /movieId/release_dates?
+				let tvOrMovie = 'release_dates'
+				// TV age rating can be retrieved using /tvId/content_ratings?
+				if (type === 'tv') tvOrMovie = 'content_ratings'
+
+				return `https://api.themoviedb.org/3/${type}/${getId}/${tvOrMovie}?api_key=${API_KEY}&language=en-US`
+			}
+			// Otherwise get the cast
+			if (get_cast) {
+				console.log('Retrieving search result cast')
+				return `https://api.themoviedb.org/3/${type}/${getId}/credits?api_key=${API_KEY}&language=en-US`
+			}
+
+			console.log('Retrieving search result popup data')
+			return `https://api.themoviedb.org/3/${type}/${getId}?api_key=${API_KEY}&language=en-US`
+		} else {
+			// otherwise just fetch all search results
+			console.log('Retrieving search results')
+			return `https://api.themoviedb.org/3/search/${mediaTypes.multi}?api_key=${API_KEY}${filters}${sort}&page=${optPage}&query=${searchTerm}`
+		}
 	}
 
-	// not searching
+	// not searching or retrieving search result data
 
 	if (get && getId > 0) {
 		if (get_classification) {
 			// Get the classification of the movie (age rating)
 			if (optCurrentMedia === mediaTypes.movie) {
+				console.log('Retrieving Movie classification')
 				return `https://api.themoviedb.org/3/${optCurrentMedia}/${getId}/release_dates?api_key=${API_KEY}&language=en-US`
 			} else if (optCurrentMedia === mediaTypes.tv) {
+				console.log('Retrieving TV classification')
 				return `https://api.themoviedb.org/3/${optCurrentMedia}/${getId}/content_ratings?api_key=${API_KEY}&language=en-US`
 			}
-		} else {
-			// Otherwise get the cast
-			if (get_cast) {
-				return `https://api.themoviedb.org/3/${optCurrentMedia}/${getId}/credits?api_key=${API_KEY}&language=en-US`
-			}
 		}
-		// Just simply return the movie details
+		// Otherwise get the cast
+		if (get_cast) {
+			console.log('Retrieving cast')
+			return `https://api.themoviedb.org/3/${optCurrentMedia}/${getId}/credits?api_key=${API_KEY}&language=en-US`
+		}
+
+		// Just simply return the movie details (type is provided after clicking search result)
+
+		console.log('Retrieving popup data')
 		return `https://api.themoviedb.org/3/${optCurrentMedia}/${getId}?api_key=${API_KEY}&language=en-US`
 	}
 	// Default is discover
+	console.log('Retrieving discover page')
 	return `https://api.themoviedb.org/3/discover/${optCurrentMedia}?api_key=${API_KEY}${filters}${sort}&page=${optPage}`
 }
 
@@ -223,7 +273,8 @@ async function getMedia(url) {
 	maxPages = data.total_pages
 	setPages()
 
-	showMedia(data.results)
+	if (url.includes('multi')) showMedia(data.results, true)
+	else showMedia(data.results)
 }
 
 /*
@@ -233,13 +284,14 @@ const main = document.getElementById('main')
 /**
  * Clear the main and append each movie (those which have a poster)
  * @param {Array<Object>} medias
+ * @param {boolean} isSearchResult indicates if the output is for search results
  */
-function showMedia(medias) {
+function showMedia(medias, isSearchResult = false) {
 	setLoading(false)
 	main.innerHTML = ''
 
 	medias.forEach((media) => {
-		const { name, title, poster_path, vote_average } = media
+		const { name, title, poster_path, vote_average, media_type } = media
 
 		const mediaElement = document.createElement('div')
 		mediaElement.classList.add('media')
@@ -257,14 +309,23 @@ function showMedia(medias) {
       </div>
 			<span class="${
 				vote_average > 5 ? (vote_average > 8 ? 'green' : 'yellow') : 'red'
-			}">${vote_average}</span>			
+			}">${vote_average}</span>
+			${
+				isSearchResult
+					? `<div class="icon">${
+							media_type === 'tv'
+								? '<i class="fas fa-tv"></i>'
+								: '<i class="fas fa-film"></i>'
+					  }</div>`
+					: ''
+			}
     `
 
 		const btn = document.createElement('button')
 		btn.classList.add('popup')
 		btn.addEventListener('click', () => {
 			CURRENT_MEDIA = media
-			showPopup()
+			showPopup(CURRENT_MEDIA.media_type)
 		})
 
 		const info = mediaElement.querySelector('.info')
@@ -279,8 +340,10 @@ function showMedia(medias) {
  * @param {number} id
  * @returns {Object[]}
  */
-async function getCurrentMedia(id) {
-	const res = await fetch(constructRequestUrl(false, '', true, id))
+async function getCurrentMedia(id, mediaType = '') {
+	const res = await fetch(
+		constructRequestUrl(false, '', true, id, false, false, mediaType)
+	)
 	const data = await res.json()
 
 	return data
@@ -291,10 +354,14 @@ async function getCurrentMedia(id) {
  * @param {number} id
  * @returns {Object[]}
  */
-async function getMovieAgeClassification(id) {
+async function getMovieAgeClassification(id, mediaType = '') {
 	// Skip the searching/searchTerm parameters,
-	//  Then we are getting the movie classification (last boolean)
-	const res = await fetch(constructRequestUrl(false, '', true, id, true))
+	//  Then we are getting the movie classification (third-last boolean)
+	//  false: not searching, '' : empty search term, true: retrieving from id, id: that id, true: get classification,
+	// false: don't get cast, mediaType: the media type to retrieve (used in search results)
+	const res = await fetch(
+		constructRequestUrl(false, '', true, id, true, false, mediaType)
+	)
 	const data = await res.json()
 
 	return data.results
@@ -313,7 +380,7 @@ async function getMovieCast(id) {
  *
  */
 const popupDiv = document.getElementById('popup')
-function showPopup() {
+function showPopup(mediaType = '') {
 	if (_loading) {
 		console.log('waiting for first task to complete')
 		return
@@ -327,16 +394,22 @@ function showPopup() {
 	_classification = ''
 	_overview = ''
 
-	getCurrentMedia(CURRENT_MEDIA.id).then((data) => {
+	getCurrentMedia(CURRENT_MEDIA.id, mediaType).then((data) => {
 		// Set the overview here
 		_overview = data.overview
-		getMovieAgeClassification(CURRENT_MEDIA.id).then((d) => {
+		getMovieAgeClassification(CURRENT_MEDIA.id, mediaType).then((d) => {
 			// Set the classification (age rating) here
 			d.forEach((_release) => {
 				if (_release.iso_3166_1 === _locale) {
-					if (optCurrentMedia === mediaTypes.movie) {
+					if (
+						mediaType === mediaTypes.movie ||
+						optCurrentMedia === mediaTypes.movie
+					) {
 						_classification = _release.release_dates[0].certification
-					} else if (optCurrentMedia === mediaTypes.tv) {
+					} else if (
+						mediaType === mediaTypes.tv ||
+						optCurrentMedia === mediaTypes.tv
+					) {
 						_classification = _release.rating
 					}
 				}
