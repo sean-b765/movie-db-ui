@@ -88,12 +88,18 @@ const setPages = () => {
 	const elem = document.createElement('div')
 	elem.classList.add('page-selection')
 
+	// Get the pages +2 and -2 from the current page
 	const values = []
 	for (let i = optPage - 2; i < optPage + 3; i++) {
 		if (i >= 1 && i <= maxPages) {
 			values.push(i)
 		}
 	}
+	// Make the 'jump to first page' button
+	if (optPage > 3) {
+		elem.innerHTML += `<button class="skip skip-start" id="skipStart"><<</button>`
+	}
+	// Render the buttons to the page-selection div and apply active-page class to current
 	values.forEach((val) => {
 		if (val === optPage) {
 			elem.innerHTML += `<button class="page active-page">${val}</button>`
@@ -101,11 +107,38 @@ const setPages = () => {
 		}
 		elem.innerHTML += `<button class="page">${val}</button>`
 	})
+	// Make the 'jump to end' button
+	if (optPage <= maxPages - 3) {
+		elem.innerHTML += `<button class="skip skip-end">>></button>`
+	}
 
 	pages.appendChild(elem)
 
-	const pageElements = document.querySelectorAll('.page')
+	// Set the page to 1 for skip to start button click event
+	try {
+		const skipStart = document.getElementById('skipStart')
+		console.log(skipStart)
+		skipStart.addEventListener('click', () => {
+			optPage = 1
+			window.scrollTo(0, 0)
+			getMedia(constructRequestUrl(), false)
+		})
+		// Catch in case we are at first, second, third pages
+	} catch (Error) {}
 
+	// Set the page to maxPage for skip to start button click event
+	try {
+		const skipEnd = document.getElementsByClassName('skip-end')[0]
+		skipEnd.addEventListener('click', () => {
+			optPage = maxPages
+			window.scrollTo(0, 0)
+			getMedia(constructRequestUrl(), false)
+		})
+		// Catch in case we at maxPage
+	} catch (Error) {}
+
+	const pageElements = document.querySelectorAll('.page')
+	// Add the events to the page buttons to set the optPage variable, then fetch again
 	pageElements.forEach((page) => {
 		page.addEventListener('click', (e) => {
 			const clickedPage = parseInt(e.target.innerHTML)
