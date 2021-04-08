@@ -32,6 +32,17 @@
 		}
 	}
 
+	.icon {
+		position: absolute;
+		color: $accent-light;
+		font-size: 1.2rem;
+		background: black;
+		top: 10px;
+		left: 10px;
+		padding-inline: 8px;
+		border-radius: 0.3rem;
+	}
+
 	.info {
 		opacity: 0;
 		color: #eee;
