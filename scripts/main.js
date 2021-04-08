@@ -302,6 +302,7 @@ function showMedia(medias, isSearchResult = false) {
 			return true
 		}
 
+		// Set the innerHTML of the full div
 		mediaElement.innerHTML = `
       <img src="${IMAGE_PATH + poster_path}" alt="${title}">
       <div class="info">
