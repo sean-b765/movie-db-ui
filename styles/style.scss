@@ -5,6 +5,7 @@ $secondary-color: #a4161a;
 $secondary-color2: rgb(185, 24, 30);
 $accent-light: #dbeeda;
 
+$mobile-lower-width-bounds: 19rem;
 $mobile-width-bounds: 28rem;
 $tablet-width-bounds: 38rem;
 
@@ -131,7 +132,7 @@ section.search-term {
 #loader {
 	position: fixed;
 	opacity: 0;
-	top: 50%;
+	top: 25rem;
 	left: 50%;
 	transition: all 0.5s ease;
 	width: 3rem;
@@ -159,6 +160,10 @@ section.search-term {
 	&.visible {
 		opacity: 1;
 		z-index: 1000;
+	}
+
+	@media screen and (max-width: $tablet-width-bounds) {
+		top: 15rem;
 	}
 }
 

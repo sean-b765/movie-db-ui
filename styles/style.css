@@ -1153,6 +1153,12 @@ section.sort .container .params {
   padding: 1rem;
 }
 
+@media screen and (max-width: 19rem) {
+  #popup .container .under-banner {
+    padding: 0;
+  }
+}
+
 #popup .container .top-info {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1197,10 +1203,23 @@ section.sort .container .params {
   text-align: center;
 }
 
+@media screen and (max-width: 19rem) {
+  #popup .container .top-info .title {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+}
+
 #popup .container .top-info .release {
   opacity: 0.8;
   font-size: 0.8rem;
   margin: 0rem 2rem 0rem 2rem;
+}
+
+@media screen and (max-width: 19rem) {
+  #popup .container .top-info .release {
+    margin-left: 1rem !important;
+  }
 }
 
 #popup .container .top-info .classification {
@@ -1210,6 +1229,17 @@ section.sort .container .params {
   border-radius: 5px;
   border: 1px solid #dbeeda;
   padding: 1px 5px;
+}
+
+@media screen and (max-width: 19rem) {
+  #popup .container .top-info {
+    margin: 0;
+  }
+  #popup .container .top-info * {
+    margin: 0 !important;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
 }
 
 #popup .container .sub-info .votes {
@@ -1228,6 +1258,7 @@ section.sort .container .params {
 
 #popup .container .sub-info .votes i {
   margin: 0;
+  margin-right: 5px;
 }
 
 #popup .container .sub-info .votes span {
@@ -1244,6 +1275,24 @@ section.sort .container .params {
 
 #popup .container .sub-info .votes span.red {
   color: rgba(240, 74, 74, 0.924);
+}
+
+@media screen and (max-width: 28rem) {
+  #popup .container .sub-info .votes span {
+    margin: 0;
+  }
+  #popup .container .sub-info .votes span:first-of-type {
+    margin-right: 10px;
+  }
+}
+
+@media screen and (max-width: 19rem) {
+  #popup .container .sub-info .votes span {
+    text-align: center;
+  }
+  #popup .container .sub-info .votes span * {
+    margin: 0;
+  }
 }
 
 #popup .container .tag {
@@ -1277,8 +1326,22 @@ section.sort .container .params {
   background: #dbeeda;
 }
 
+@media screen and (max-width: 19rem) {
+  #popup .container .mobile-button button {
+    margin: 0 5px 0 5px !important;
+    padding: 8px 14px;
+  }
+}
+
 #popup .container *:not(.exclude-margin) {
   margin: 1rem;
+}
+
+@media screen and (max-width: 19rem) {
+  #popup .container *:not(.exclude-margin) {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
 }
 
 #popup .container *:not(.banner):not(img) {
@@ -1334,12 +1397,24 @@ section.sort .container .params {
   left: 200vw;
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
-  padding: 2rem 1rem;
   color: #dbeeda;
 }
 
 #popup .pane .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: start;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   margin: 5rem 2rem;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 #popup .pane #info-close-icon {
@@ -1380,6 +1455,30 @@ section.sort .container .params {
   left: 0;
 }
 
+#popup .pane .cast .member {
+  max-width: 12rem;
+  overflow-x: hidden;
+}
+
+#popup .pane .cast img {
+  max-width: 12rem;
+}
+
+#popup .pane .cast .name {
+  margin-top: 0;
+}
+
+#popup .pane .cast .role {
+  font-style: italic;
+  font-size: 0.9rem;
+  padding-left: 0.5rem;
+  opacity: 0.9;
+}
+
+#popup .pane .cast.with-image:last-of-type, #popup .pane .cast:last-of-type {
+  padding-bottom: 5rem;
+}
+
 @media screen and (min-width: 38rem) {
   #popup .pane {
     width: 70vw;
@@ -1387,6 +1486,16 @@ section.sort .container .params {
   #popup .pane.open {
     left: 30vw;
   }
+}
+
+@media screen and (max-width: 38rem) {
+  #popup .pane .container {
+    margin: 1.5rem 0rem;
+  }
+}
+
+#popup .pane .container.plot {
+  padding: 4rem 1rem;
 }
 
 #popup.open {
@@ -1552,7 +1661,7 @@ section.search-term .search .close::after {
 #loader {
   position: fixed;
   opacity: 0;
-  top: 50%;
+  top: 25rem;
   left: 50%;
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
@@ -1586,6 +1695,12 @@ section.search-term .search .close::after {
 #loader.visible {
   opacity: 1;
   z-index: 1000;
+}
+
+@media screen and (max-width: 38rem) {
+  #loader {
+    top: 15rem;
+  }
 }
 
 @-webkit-keyframes pulseA {

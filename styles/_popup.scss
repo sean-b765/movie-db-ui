@@ -77,6 +77,9 @@
 			width: 100%;
 			max-width: calc(min(100%, 60rem));
 			padding: 1rem;
+			@media screen and (max-width: $mobile-lower-width-bounds) {
+				padding: 0;
+			}
 		}
 
 		.top-info {
@@ -101,11 +104,18 @@
 				font-weight: 900;
 				margin: 1.2rem 1.4rem;
 				text-align: center;
+				@media screen and (max-width: $mobile-lower-width-bounds) {
+					margin-top: 1rem !important;
+					margin-bottom: 1rem !important;
+				}
 			}
 			.release {
 				opacity: 0.8;
 				font-size: 0.8rem;
 				margin: 0rem 2rem 0rem 2rem;
+				@media screen and (max-width: $mobile-lower-width-bounds) {
+					margin-left: 1rem !important;
+				}
 			}
 			.classification {
 				margin: 1rem 0 1rem 2rem;
@@ -114,6 +124,15 @@
 				border-radius: 5px;
 				border: 1px solid $accent-light;
 				padding: 1px 5px;
+			}
+
+			@media screen and (max-width: $mobile-lower-width-bounds) {
+				margin: 0;
+				* {
+					margin: 0 !important;
+					margin-top: 15px;
+					margin-bottom: 10px;
+				}
 			}
 		}
 
@@ -125,6 +144,7 @@
 				justify-content: end;
 				i {
 					margin: 0;
+					margin-right: 5px;
 				}
 				span {
 					margin: 0 1rem 0 1rem;
@@ -136,6 +156,18 @@
 					}
 					&.red {
 						color: rgba(240, 74, 74, 0.924);
+					}
+					@media screen and (max-width: $mobile-width-bounds) {
+						margin: 0;
+						&:first-of-type {
+							margin-right: 10px;
+						}
+					}
+					@media screen and (max-width: $mobile-lower-width-bounds) {
+						text-align: center;
+						* {
+							margin: 0;
+						}
 					}
 				}
 			}
@@ -162,10 +194,21 @@
 					background: $accent-light;
 				}
 			}
+
+			@media screen and (max-width: $mobile-lower-width-bounds) {
+				button {
+					margin: 0 5px 0 5px !important;
+					padding: 8px 14px;
+				}
+			}
 		}
 
 		*:not(.exclude-margin) {
 			margin: 1rem;
+			@media screen and (max-width: $mobile-lower-width-bounds) {
+				margin-top: 15px;
+				margin-bottom: 15px;
+			}
 		}
 
 		*:not(.banner):not(img) {
@@ -210,11 +253,16 @@
 		top: 0;
 		left: 200vw;
 		transition: all 0.5s ease;
-		padding: 2rem 1rem;
 		color: $accent-light;
 
 		.container {
+			display: flex;
+			align-items: start;
+			justify-content: center;
+			flex-wrap: wrap;
 			margin: 5rem 2rem;
+			overflow-x: hidden;
+			overflow-y: scroll;
 		}
 
 		#info-close-icon {
@@ -247,11 +295,43 @@
 			left: 0;
 		}
 
+		.cast {
+			.member {
+				max-width: 12rem;
+				overflow-x: hidden;
+			}
+			img {
+				max-width: 12rem;
+			}
+			.name {
+				margin-top: 0;
+			}
+			.role {
+				font-style: italic;
+				font-size: 0.9rem;
+				padding-left: 0.5rem;
+				opacity: 0.9;
+			}
+
+			&.with-image:last-of-type,
+			&:last-of-type {
+				padding-bottom: 5rem;
+			}
+		}
+
 		@media screen and (min-width: $tablet-width-bounds) {
 			width: 70vw;
 			&.open {
 				left: 30vw;
 			}
+		}
+		@media screen and (max-width: $tablet-width-bounds) {
+			.container {
+				margin: 1.5rem 0rem;
+			}
+		}
+		.container.plot {
+			padding: 4rem 1rem;
 		}
 	}
 
