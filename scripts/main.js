@@ -26,7 +26,7 @@ const mediaTypes = {
 }
 
 // Debug mode
-const debug = true
+const debug = false
 const log = (value) => {
 	if (!debug) return
 	console.log(value)
