@@ -25,6 +25,13 @@ const mediaTypes = {
 	multi: 'multi',
 }
 
+// Debug mode
+const debug = true
+const log = (value) => {
+	if (!debug) return
+	console.log(value)
+}
+
 // User's region (not implemented)
 const _locale = 'US'
 
@@ -117,7 +124,7 @@ const setPages = () => {
 	// Set the page to 1 for skip to start button click event
 	try {
 		const skipStart = document.getElementsByClassName('skip-start')[0]
-		console.log(skipStart)
+		log(skipStart)
 		skipStart.addEventListener('click', () => {
 			optPage = 1
 			window.scrollTo(0, 0)
@@ -193,7 +200,11 @@ const constructRequestUrl = (
 ) => {
 	// set the filters based on the toggles
 	let filters = `${
-		checkboxRelease.checked ? `&primary_release_year=${release.value}` : ''
+		checkboxRelease.checked
+			? optCurrentMedia === mediaTypes.tv
+				? `&first_air_date_year=${release.value}`
+				: `&primary_release_year=${release.value}`
+			: ''
 	}${
 		checkboxRating.checked
 			? `&vote_average.gte=${minRating.value}&vote_average.lte=${maxRating.value}`
@@ -222,7 +233,7 @@ const constructRequestUrl = (
 		if (type !== '') {
 			if (get_classification) {
 				// Get the classification of the result (age rating)
-				console.log('Retrieving search result age rating')
+				log('Retrieving search result age rating')
 				// Movies age rating can be retrieved using /movieId/release_dates?
 				let tvOrMovie = 'release_dates'
 				// TV age rating can be retrieved using /tvId/content_ratings?
@@ -232,15 +243,15 @@ const constructRequestUrl = (
 			}
 			// Otherwise get the cast
 			if (get_cast) {
-				console.log('Retrieving search result cast')
+				log('Retrieving search result cast')
 				return `https://api.themoviedb.org/3/${type}/${getId}/credits?api_key=${API_KEY}&language=en-US`
 			}
 
-			console.log('Retrieving search result popup data')
+			log('Retrieving search result popup data')
 			return `https://api.themoviedb.org/3/${type}/${getId}?api_key=${API_KEY}&language=en-US`
 		} else {
 			// otherwise just fetch all search results
-			console.log('Retrieving search results')
+			log('Retrieving search results')
 			return `https://api.themoviedb.org/3/search/${mediaTypes.multi}?api_key=${API_KEY}${filters}${sort}&page=${optPage}&query=${searchTerm}`
 		}
 	}
@@ -251,26 +262,27 @@ const constructRequestUrl = (
 		if (get_classification) {
 			// Get the classification of the movie (age rating)
 			if (optCurrentMedia === mediaTypes.movie) {
-				console.log('Retrieving Movie classification')
+				log('Retrieving Movie classification')
 				return `https://api.themoviedb.org/3/${optCurrentMedia}/${getId}/release_dates?api_key=${API_KEY}&language=en-US`
 			} else if (optCurrentMedia === mediaTypes.tv) {
-				console.log('Retrieving TV classification')
+				log('Retrieving TV classification')
 				return `https://api.themoviedb.org/3/${optCurrentMedia}/${getId}/content_ratings?api_key=${API_KEY}&language=en-US`
 			}
 		}
 		// Otherwise get the cast
 		if (get_cast) {
-			console.log('Retrieving cast')
+			log('Retrieving cast')
 			return `https://api.themoviedb.org/3/${optCurrentMedia}/${getId}/credits?api_key=${API_KEY}&language=en-US`
 		}
 
 		// Just simply return the movie details (type is provided after clicking search result)
 
-		console.log('Retrieving popup data')
+		log('Retrieving popup data')
 		return `https://api.themoviedb.org/3/${optCurrentMedia}/${getId}?api_key=${API_KEY}&language=en-US`
 	}
 	// Default is discover
-	console.log('Retrieving discover page')
+	log('Retrieving discover page')
+	log(optCurrentMedia)
 	return `https://api.themoviedb.org/3/discover/${optCurrentMedia}?api_key=${API_KEY}${filters}${sort}&page=${optPage}`
 }
 
@@ -280,6 +292,8 @@ const constructRequestUrl = (
  */
 async function getMedia(url) {
 	setLoading(true)
+
+	log(url)
 
 	const res = await fetch(url)
 	const data = await res.json()
@@ -364,6 +378,7 @@ async function getCurrentMedia(id, mediaType = '') {
 	)
 	const data = await res.json()
 
+	log(data)
 	return data
 }
 
@@ -413,7 +428,7 @@ function showPopup(mediaType = '') {
 	disableScroll()
 
 	if (_loading) {
-		console.log('waiting for first task to complete')
+		log('waiting for first task to complete')
 		return
 	}
 
@@ -561,6 +576,7 @@ const showCast = (id, mediaType = '') => {
 		} catch (Error) {}
 
 		// now push each person to the cast (max of 16 people)
+		const MAX = 15
 		cast.forEach((person) => {
 			if (_cast.cast.length > 15) return true
 
@@ -577,7 +593,7 @@ const showCast = (id, mediaType = '') => {
 		// Only add director if it exists
 		if (_cast.director.name) {
 			infoAreaContainer.innerHTML += `
-			<div class='cast director'>
+			<div class='director'>
 				<img src='${
 					_cast.director.img
 						? IMAGE_PATH + _cast.director.img
@@ -592,9 +608,11 @@ const showCast = (id, mediaType = '') => {
 			</div>`
 		}
 
-		_cast.cast.forEach((member) => {
+		_cast.cast.forEach((member, index) => {
 			infoAreaContainer.innerHTML += `
-			<div class='cast member ${member.img ? 'with-image' : ''}'>
+			<div class='member${member.img ? ' with-image' : ''}' ${
+				MAX === index ? 'style="padding-bottom: 12rem !important;"' : ''
+			}>
 				<img src='${
 					member.img ? IMAGE_PATH + member.img : './img/default-user.png'
 				}' alt='Picture of ${member.name}'></img>
@@ -643,7 +661,7 @@ mobileForm.addEventListener('submit', (e) => {
 		getMedia(constructRequestUrl(true, searchTerm))
 		mobileSearch.value = ''
 	} else {
-		console.log('Error searching')
+		log('Error searching')
 	}
 })
 const search = document.getElementById('search-desktop')
@@ -658,7 +676,7 @@ form.addEventListener('submit', (e) => {
 		getMedia(constructRequestUrl(true, searchTerm))
 		search.value = ''
 	} else {
-		console.log('Error searching')
+		log('Error searching')
 	}
 })
 
