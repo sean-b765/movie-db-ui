@@ -193,3 +193,13 @@ section.search-term {
 		transform: translate(-50%, -50%) scale(1);
 	}
 }
+
+@keyframes panImg {
+	0%,
+	100% {
+		transform: translateY(0%) scale(1);
+	}
+	50% {
+		transform: translateY(0%) scale(1.2);
+	}
+}

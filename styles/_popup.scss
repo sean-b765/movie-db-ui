@@ -63,10 +63,13 @@
 			z-index: -1;
 			max-height: 30vh;
 			overflow: hidden;
+
 			img {
-				top: -50%;
 				width: 100%;
 				max-width: 100%;
+				@media screen and (min-width: $tablet-width-bounds) {
+					animation: panImg 60s linear infinite both;
+				}
 			}
 		}
 
@@ -296,12 +299,15 @@
 		}
 
 		.cast {
-			.member {
+			.member,
+			.director {
 				max-width: 12rem;
 				overflow-x: hidden;
 			}
 			img {
+				min-width: 12rem;
 				max-width: 12rem;
+				margin: 0 !important;
 			}
 			.name {
 				margin-top: 0;
@@ -311,11 +317,6 @@
 				font-size: 0.9rem;
 				padding-left: 0.5rem;
 				opacity: 0.9;
-			}
-
-			&.with-image:last-of-type,
-			&:last-of-type {
-				padding-bottom: 5rem;
 			}
 		}
 
