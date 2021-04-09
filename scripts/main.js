@@ -440,70 +440,81 @@ function showPopup(mediaType = '') {
 	_classification = ''
 	_overview = ''
 
-	getCurrentMedia(CURRENT_MEDIA.id, mediaType).then((data) => {
+	getCurrentMedia(CURRENT_MEDIA.id, mediaType).then((mediaData) => {
 		// Set the overview here
-		_overview = data.overview
-		getMovieAgeClassification(CURRENT_MEDIA.id, mediaType).then((d) => {
-			// Set the classification (age rating) here
-			d.forEach((_release) => {
-				if (_release.iso_3166_1 === _locale) {
-					if (
-						mediaType === mediaTypes.movie ||
-						optCurrentMedia === mediaTypes.movie
-					) {
-						_classification = _release.release_dates[0].certification
-					} else if (
-						mediaType === mediaTypes.tv ||
-						optCurrentMedia === mediaTypes.tv
-					) {
-						_classification = _release.rating
+		_overview = mediaData.overview
+		getMovieAgeClassification(CURRENT_MEDIA.id, mediaType).then(
+			(ageClassResult) => {
+				// Set the classification (age rating) here
+				ageClassResult.forEach((releaseDates) => {
+					if (releaseDates.iso_3166_1 === _locale) {
+						if (
+							mediaType === mediaTypes.movie ||
+							optCurrentMedia === mediaTypes.movie
+						) {
+							_classification = releaseDates.release_dates[0].certification
+						} else if (
+							mediaType === mediaTypes.tv ||
+							optCurrentMedia === mediaTypes.tv
+						) {
+							_classification = releaseDates.rating
+						}
 					}
-				}
-			})
+				})
 
-			// Add open class to popup div
-			popupDiv.classList.add('open')
+				// Add open class to popup div
+				popupDiv.classList.add('open')
 
-			const container = popupDiv.getElementsByClassName('container')[0]
-			// Insert HTML into the container
-			container.innerHTML = `
+				const container = popupDiv.getElementsByClassName('container')[0]
+				// Insert HTML into the container
+				container.innerHTML = `
 				<div class="banner exclude-margin">
 					<img src="${
 						IMAGE_PATH +
-						(data.backdrop_path ? data.backdrop_path : data.poster_path)
+						(mediaData.backdrop_path
+							? mediaData.backdrop_path
+							: mediaData.poster_path)
 					}" class="exclude-margin"></img>
 				</div>
 				<div class="under-banner exclude-margin">
 					<div class="top-info exclude-margin">
-						<h3 class="title">${data.title ? data.title : data.name}</h3>
+						<h3 class="title">${mediaData.title ? mediaData.title : mediaData.name}</h3>
 						<div class="info-small exclude-margin">
 							${
 								_classification &&
 								`<h4 class="classification exclude-margin">${_classification}</h4>`
 							}
 							<h4 class="release exclude-margin">${
-								data.release_date ? data.release_date : data.first_air_date
+								mediaData.release_date
+									? mediaData.release_date
+									: mediaData.first_air_date
+									? mediaData.first_air_date
+									: ''
 							}</h4>
 						</div>
 					</div>
 					<div class="tag exclude-margin"><h5>${
-						data.tagline ? `"${data.tagline}"` : ''
+						mediaData.tagline ? `"${mediaData.tagline}"` : ''
 					}</h5></div>
 					<div class="sub-info">
 						<div class="votes">
 							<span class="average">
 								<i class="fas fa-fire exclude-margin" alt="Average vote icon"></i>
 								<span class="${
-									data.vote_average > 5
-										? data.vote_average > 8
+									mediaData.vote_average > 5
+										? mediaData.vote_average > 8
 											? 'green'
 											: 'yellow'
 										: 'red'
-								} exclude-margin" alt="Average vote">${data.vote_average}</span>
+								} exclude-margin" alt="Average vote">${
+					mediaData.vote_average ? mediaData.vote_average : '0'
+				}</span>
 							</span>
 							<span class="total">
 								<i class="fas fa-user exclude-margin" alt="Total votes icon"></i>
-								<span class="count exclude-margin" alt="Total votes">${data.vote_count}</span>
+								<span class="count exclude-margin" alt="Total votes">${
+									mediaData.vote_count ? mediaData.vote_count : 0
+								}</span>
 							</span>
 						</div>
 					</div>
@@ -512,30 +523,31 @@ function showPopup(mediaType = '') {
 					</div>
 				</div>
 			`
-			// Get buttons section,
-			const buttons = container.querySelector('.mobile-button')
-			// Append 'view plot', 'view cast' buttons
-			const btnPlot = document.createElement('button')
-			btnPlot.classList.add('round')
-			btnPlot.id = 'btnViewPlot'
-			btnPlot.innerHTML = 'View Plot'
-			btnPlot.addEventListener('click', () => {
-				showPlotMobile()
-			})
-			buttons.appendChild(btnPlot)
+				// Get buttons section,
+				const buttons = container.querySelector('.mobile-button')
+				// Append 'view plot', 'view cast' buttons
+				const btnPlot = document.createElement('button')
+				btnPlot.classList.add('round')
+				btnPlot.id = 'btnViewPlot'
+				btnPlot.innerHTML = 'View Plot'
+				btnPlot.addEventListener('click', () => {
+					showPlotMobile()
+				})
+				buttons.appendChild(btnPlot)
 
-			const btnCast = document.createElement('button')
-			btnCast.classList.add('round')
-			btnCast.id = 'btnViewCast'
-			btnCast.innerHTML = 'View Cast'
-			btnCast.addEventListener('click', () => {
-				showCast(CURRENT_MEDIA.id, mediaType)
-			})
-			buttons.appendChild(btnCast)
+				const btnCast = document.createElement('button')
+				btnCast.classList.add('round')
+				btnCast.id = 'btnViewCast'
+				btnCast.innerHTML = 'View Cast'
+				btnCast.addEventListener('click', () => {
+					showCast(CURRENT_MEDIA.id, mediaType)
+				})
+				buttons.appendChild(btnCast)
 
-			// Mark loading as false again
-			setLoading(false)
-		})
+				// Mark loading as false again
+				setLoading(false)
+			}
+		)
 	})
 }
 
@@ -553,9 +565,9 @@ const showCast = (id, mediaType = '') => {
 	infoAreaContainer.classList.add('cast')
 	setLoading(true)
 
-	getMovieCast(id, mediaType).then((data) => {
+	getMovieCast(id, mediaType).then((castData) => {
 		setLoading(false)
-		const { cast, crew } = data
+		const { cast, crew } = castData
 
 		// Initialise
 		_cast = {
@@ -624,6 +636,10 @@ const showCast = (id, mediaType = '') => {
 				</div>
 			</div>`
 		})
+
+		if (_cast.cast.length === 0) {
+			infoAreaContainer.innerHTML = "Couldn't find data for this one."
+		}
 	})
 }
 const showPlotMobile = () => {
