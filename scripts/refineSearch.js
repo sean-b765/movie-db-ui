@@ -1,5 +1,8 @@
 const containers = document.querySelectorAll('.field-header')
-const sliders = document.querySelectorAll('input[type="range"]')
+const sliders = document.querySelectorAll('input[type="range"].customRange')
+const singleSliders = document.querySelectorAll(
+	'input[type="range"].singleRange'
+)
 const filterValues = document.querySelectorAll('input.value')
 
 const date = new Date()
@@ -25,52 +28,45 @@ containers.forEach((element) => {
 })
 
 /*
-	With the sliders, the values should be handled based on
+	With the custom sliders, the values should be handled based on
 	The value of the other slider
 
 	e.g. 	if the min slider is greater than the max slider, 
 		you must move the max slider with it to prevent invalid ranges
 */
 sliders.forEach((slider) => {
+	// initialize values
 	slider.nextElementSibling.value = slider.value
 
 	slider.addEventListener('input', (e) => {
-		slider.nextElementSibling.value = e.target.value
+		const current = e.target.classList[0]
 
-		let adjacentSlider = null,
-			doAdjacentCheck = true
-		// get the container adjacent to this one (so we can adjust the min/max)
-		try {
-			adjacentSlider =
-				slider.offsetParent.nextElementSibling === null
-					? slider.offsetParent.previousElementSibling.querySelector(
-							'input[type="range"]'
-					  )
-					: slider.offsetParent.nextElementSibling.querySelector(
-							'input[type="range"]'
-					  )
-		} catch (TypeError) {
-			// we don't need to perform the adjacent slider check
-			doAdjacentCheck = false
-		}
+		const min = document.getElementById('minRating').previousElementSibling
+		const max = document.getElementById('maxRating').previousElementSibling
 
-		if (!doAdjacentCheck) return
+		console.log('\nmin:', min.value, '\nmax:', max.value)
 
-		if (slider.classList.contains('min')) {
-			// this slider should reflect the minimum value in the range
-			// don't let the sliders overlap
-			if (adjacentSlider.value <= e.target.value) {
-				adjacentSlider.value = e.target.value
-				adjacentSlider.nextElementSibling.value = e.target.value
+		if (current === 'min') {
+			if (parseFloat(min.value) > parseFloat(max.value)) {
+				max.value = min.value
 			}
-		} else if (slider.classList.contains('max')) {
-			// this slider will reflect the maximum value in the range
-			// don't let the sliders overlap
-			if (adjacentSlider.value >= e.target.value) {
-				adjacentSlider.value = e.target.value
-				adjacentSlider.nextElementSibling.value = e.target.value
+		} else if (current === 'max') {
+			if (parseFloat(max.value) < parseFloat(min.value)) {
+				min.value = max.value
 			}
 		}
+
+		max.nextElementSibling.value = max.value
+		min.nextElementSibling.value = min.value
+	})
+})
+
+// For slider/range inputs which is a single value, not a range of values
+//  e.g. release year is a single value input, rating is a range (has a min,max)
+singleSliders.forEach((slider) => {
+	slider.addEventListener('input', (e) => {
+		const nextSibling = slider.nextElementSibling
+		nextSibling.value = e.target.value
 	})
 })
 
